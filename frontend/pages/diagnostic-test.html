@@ -1,0 +1,223 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Diagnostic Test | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/diagnostic-test.css">
+</head>
+
+<body class="diagnostic-page">
+
+    <header class="diagnostic-header">
+        <a href="dashboard.html" class="diagnostic-brand">
+            <span class="brand-mark">R</span>
+            <span>RootLearn</span>
+        </a>
+
+        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+    </header>
+
+    <main class="diagnostic-main">
+
+        <!-- Introduction -->
+        <section id="testIntro" class="test-intro">
+            <span class="eyebrow">YOUR LEARNING JOURNEY STARTS HERE</span>
+
+            <h1>Discover what you <span>already know.</span></h1>
+
+            <p>
+                This diagnostic assessment explores your understanding of
+                Python fundamentals. Your results will help RootLearn
+                identify topics that may need more attention.
+            </p>
+
+            <div class="test-overview">
+                <div class="overview-item">
+                    <span class="overview-number">20</span>
+                    <span class="overview-label">Questions</span>
+                </div>
+
+                <div class="overview-item">
+                    <span class="overview-number">10</span>
+                    <span class="overview-label">Topics</span>
+                </div>
+
+                <div class="overview-item">
+                    <span class="overview-number">4</span>
+                    <span class="overview-label">Options per question</span>
+                </div>
+            </div>
+
+            <div class="test-note">
+                <span class="note-symbol">✳</span>
+                <p>
+                    Take your time and choose the answer you believe is
+                    correct. Your results are intended to guide your learning,
+                    not to judge your ability.
+                </p>
+            </div>
+
+            <button type="button" id="startTestBtn" class="primary-btn">
+                Start Diagnostic Test <span>→</span>
+            </button>
+
+            <p class="intro-footnote">
+                Your topic-wise results will be available after submission.
+            </p>
+        </section>
+
+        <!-- Test area -->
+        <section id="testArea" class="test-area" hidden>
+
+            <div class="test-heading">
+                <div>
+                    <span class="eyebrow">PYTHON PROGRAMMING</span>
+                    <h1>Let's test your foundations.</h1>
+                </div>
+
+                <span id="answeredCounter" class="answered-counter">
+                    0 of 20 answered
+                </span>
+            </div>
+
+            <div class="progress-track">
+                <div id="testProgress" class="progress-fill"></div>
+            </div>
+
+            <div class="question-card">
+
+                <div class="question-meta">
+                    <span id="questionNumber">QUESTION 01 OF 20</span>
+                    <span id="questionTopic" class="question-topic">Variables</span>
+                </div>
+
+                <h2 id="questionText">Loading question...</h2>
+
+                <p class="select-hint">Choose one answer.</p>
+
+                <div id="answerOptions" class="answer-options"></div>
+
+                <p id="questionError" class="question-error" role="alert" hidden>
+                    Please choose an answer before continuing.
+                </p>
+
+            </div>
+
+            <div class="question-navigation">
+                <button type="button" id="previousQuestionBtn" class="secondary-btn">
+                    ← Previous
+                </button>
+
+               
+                <button type="button" id="nextQuestionBtn" class="primary-btn">
+                    Next Question →
+                </button>
+
+                <button type="button" id="submitTestBtn" class="primary-btn" hidden>
+                    Submit Test ✓
+                </button>
+            </div>
+
+            <p class="submission-note">
+                Review your answers before submitting. You cannot change them
+                after the test is submitted.
+            </p>
+
+        </section>
+
+        <!-- Submission confirmation -->
+        <section id="submitConfirmation" class="confirmation-card" hidden>
+            <span class="eyebrow">ALMOST THERE</span>
+
+            <h1>Ready to see your results?</h1>
+
+            <p id="completionMessage">
+                Check your answers before submitting your diagnostic test.
+            </p>
+
+            <div class="confirmation-actions">
+                <button type="button" id="reviewAnswersBtn" class="secondary-btn">
+                    Review Answers
+                </button>
+
+                <button type="button" id="confirmSubmitBtn" class="primary-btn">
+                    Submit My Test
+                </button>
+            </div>
+        </section>
+
+        <!-- Results -->
+        <section id="testResults" class="test-results" hidden>
+
+            <div class="results-heading">
+                <span class="eyebrow">YOUR DIAGNOSTIC REPORT</span>
+                <h1>Your learning journey, <span>decoded.</span></h1>
+                <p>
+                    Use these results to understand your current strengths
+                    and choose what to learn next.
+                </p>
+            </div>
+
+            <div class="overall-score-card">
+                <div>
+                    <span class="score-label">YOUR OVERALL SCORE</span>
+                    <h2 id="overallScore">—%</h2>
+                    <p id="overallFeedback">Your results will appear here.</p>
+                </div>
+
+                <div class="score-summary">
+                    <div>
+                        <span id="correctCount">—</span>
+                        <small>Correct</small>
+                    </div>
+
+                    <div>
+                        <span id="incorrectCount">—</span>
+                        <small>Incorrect</small>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topic-results-card">
+                <div class="results-card-heading">
+                    <div>
+                        <span class="eyebrow">PERFORMANCE BREAKDOWN</span>
+                        <h2>How you did by topic</h2>
+                    </div>
+                </div>
+
+                <div id="topicResultsList" class="topic-results-list"></div>
+            </div>
+
+            <div class="results-actions">
+                <button type="button" id="openMapBtn" class="primary-btn">
+                    Explore Prerequisite Map →
+                </button>
+
+                <button type="button" id="openResourcesBtn" class="secondary-btn">
+                    Browse Learning Resources
+                </button>
+            </div>
+
+            <p class="results-disclaimer">
+                This report reflects your performance on the questions in
+                this assessment. It is a starting point, not a permanent
+                measure of your ability.
+            </p>
+
+        </section>
+
+        <div id="testStatus" class="test-status" role="status" hidden></div>
+
+    </main>
+
+    <script src="../js/diagnostic-test.js"></script>
+
+</body>
+</html>

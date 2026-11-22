@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Create your RootLearn account and begin your personalized learning journey."
+    >
+
+    <title>Create Account | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .auth-page {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 0.95fr 1.05fr;
+        }
+
+        .auth-story {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 42px clamp(28px, 5vw, 76px);
+            overflow: hidden;
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .auth-story::before {
+            content: "";
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            right: -150px;
+            top: 18%;
+            border: 1px solid rgba(255, 255, 255, 0.17);
+            border-radius: 50%;
+            box-shadow:
+                0 0 0 35px rgba(255, 255, 255, 0.035),
+                0 0 0 75px rgba(255, 255, 255, 0.025);
+        }
+
+        .auth-story .brand {
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .auth-story .brand-mark {
+            background: var(--color-accent);
+        }
+
+        .story-content {
+            position: relative;
+            z-index: 1;
+            max-width: 490px;
+            margin-block: 60px;
+        }
+
+        .story-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            color: #F0C6B8;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.13em;
+            text-transform: uppercase;
+        }
+
+        .story-label::before {
+            content: "";
+            width: 22px;
+            height: 2px;
+            background: var(--color-accent);
+        }
+
+        .story-content h1 {
+            margin-top: 24px;
+            margin-bottom: 22px;
+            color: white;
+            font-size: clamp(2.6rem, 4.2vw, 4.2rem);
+        }
+
+        .story-content h1 em {
+            color: #F0C6B8;
+            font-weight: 500;
+        }
+
+        .story-content > p {
+            color: rgba(255, 255, 255, 0.76);
+            font-size: 1rem;
+            line-height: 1.9;
+        }
+
+        .story-points {
+            display: grid;
+            gap: 16px;
+            margin-top: 36px;
+        }
+
+        .story-point {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: rgba(255, 255, 255, 0.91);
+            font-size: 0.9rem;
+        }
+
+        .story-point span {
+            display: grid;
+            place-items: center;
+            width: 32px;
+            height: 32px;
+            flex-shrink: 0;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: #F0C6B8;
+        }
+
+        .story-footer {
+            position: relative;
+            z-index: 1;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.8rem;
+        }
+
+        .auth-form-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            background: var(--color-bg);
+        }
+
+        .auth-form-container {
+            width: min(100%, 440px);
+        }
+
+        .mobile-brand {
+            display: none;
+            margin-bottom: 40px;
+        }
+
+        .auth-heading {
+            margin-bottom: 12px;
+            font-size: clamp(2.2rem, 4vw, 3rem);
+        }
+
+        .auth-subtitle {
+            margin-bottom: 32px;
+            line-height: 1.8;
+            font-size: 0.94rem;
+        }
+
+        .auth-form {
+            display: grid;
+            gap: 19px;
+        }
+
+        .form-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .form-field label {
+            color: var(--color-text);
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .form-field input {
+            width: 100%;
+            min-height: 50px;
+            padding: 12px 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            background: white;
+            color: var(--color-text);
+            outline: none;
+            transition:
+                border-color var(--transition-fast),
+                box-shadow var(--transition-fast);
+        }
+
+        .form-field input:focus {
+            border-color: var(--color-primary);
+            box-shadow: 0 0 0 3px rgba(99, 59, 82, 0.1);
+        }
+
+        .form-field input::placeholder {
+            color: #AAA09A;
+        }
+
+        .password-wrap {
+            position: relative;
+        }
+
+        .password-wrap input {
+            padding-right: 75px;
+        }
+
+        .password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            transform: translateY(-50%);
+            padding: 5px;
+            border: none;
+            background: transparent;
+            color: var(--color-primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .field-hint {
+            color: var(--color-text-muted);
+            font-size: 0.76rem;
+        }
+
+        .form-error {
+            display: none;
+            padding: 12px 14px;
+            border: 1px solid #E7B9B5;
+            border-radius: 10px;
+            background: #FFF0EE;
+            color: #8F3434;
+            font-size: 0.84rem;
+        }
+
+        .form-error.visible {
+            display: block;
+        }
+
+        .form-success {
+            display: none;
+            padding: 13px 15px;
+            border: 1px solid #C6D8C6;
+            border-radius: 10px;
+            background: #EEF5EC;
+            color: #355A3B;
+            font-size: 0.86rem;
+        }
+
+        .form-success.visible {
+            display: block;
+        }
+
+        .auth-submit {
+            width: 100%;
+            min-height: 52px;
+            margin-top: 4px;
+        }
+
+        .auth-switch {
+            margin-top: 27px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .auth-switch a {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .auth-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .privacy-note {
+            margin-top: 25px;
+            text-align: center;
+            font-size: 0.76rem;
+            line-height: 1.8;
+        }
+
+        @media (max-width: 850px) {
+            .auth-page {
+                grid-template-columns: 1fr;
+            }
+
+            .auth-story {
+                display: none;
+            }
+
+            .auth-form-side {
+                min-height: 100vh;
+                padding: 38px 22px;
+            }
+
+            .mobile-brand {
+                display: inline-flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="auth-page">
+
+        <section class="auth-story" aria-label="About RootLearn">
+
+            <a href="../index.html" class="brand">
+                <span class="brand-mark" aria-hidden="true">R</span>
+                <span>rootlearn</span>
+            </a>
+
+            <div class="story-content">
+
+                <span class="story-label">
+                    Your learning journey
+                </span>
+
+                <h1>
+                    Start with what you know.<br>
+                    Grow from <em>there.</em>
+                </h1>
+
+                <p>
+                    Every learner has a different starting point.
+                    RootLearn helps you understand your foundations
+                    and discover what to focus on next.
+                </p>
+
+                <div class="story-points">
+
+                    <div class="story-point">
+                        <span aria-hidden="true">◎</span>
+                        Identify learning gaps
+                    </div>
+
+                    <div class="story-point">
+                        <span aria-hidden="true">✳</span>
+                        Explore relevant learning resources
+                    </div>
+
+                    <div class="story-point">
+                        <span aria-hidden="true">↗</span>
+                        Track your improvement
+                    </div>
+
+                </div>
+
+            </div>
+
+            <p class="story-footer">
+                Understand your learning. Build your foundation.
+            </p>
+
+        </section>
+
+
+        <section class="auth-form-side">
+
+            <div class="auth-form-container">
+
+                <a href="../index.html" class="brand mobile-brand">
+                    <span class="brand-mark" aria-hidden="true">R</span>
+                    <span>rootlearn</span>
+                </a>
+
+                <span class="eyebrow">Create your account</span>
+
+                <h1 class="auth-heading">
+                    Let's begin.
+                </h1>
+
+                <p class="auth-subtitle">
+                    Create your student profile and take the first
+                    step towards understanding how you learn.
+                </p>
+
+                <div
+                    id="form-error"
+                    class="form-error"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+                <div
+                    id="form-success"
+                    class="form-success"
+                    role="status"
+                    aria-live="polite"
+                ></div>
+
+                <form id="register-form" class="auth-form">
+
+                    <div class="form-field">
+                        <label for="full-name">Full name</label>
+
+                        <input
+                            id="full-name"
+                            name="fullName"
+                            type="text"
+                            placeholder="Enter your name"
+                            autocomplete="name"
+                            minlength="2"
+                            maxlength="80"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-field">
+                        <label for="email">Email address</label>
+
+                        <input
+                            id="email"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            maxlength="254"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="form-field">
+                        <label for="password">Create password</label>
+
+                        <div class="password-wrap">
+
+                            <input
+                                id="password"
+                                name="password"
+                                type="password"
+                                placeholder="At least 8 characters"
+                                autocomplete="new-password"
+                                minlength="8"
+                                maxlength="128"
+                                aria-describedby="password-hint"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-toggle-password="password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+
+                        <span id="password-hint" class="field-hint">
+                            Use at least 8 characters.
+                        </span>
+                    </div>
+
+
+                    <div class="form-field">
+                        <label for="confirm-password">
+                            Confirm password
+                        </label>
+
+                        <div class="password-wrap">
+
+                            <input
+                                id="confirm-password"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Enter your password again"
+                                autocomplete="new-password"
+                                minlength="8"
+                                maxlength="128"
+                                required
+                            >
+
+                            <button
+                                class="password-toggle"
+                                type="button"
+                                data-toggle-password="confirm-password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <button
+                        class="button button-primary auth-submit"
+                        type="submit"
+                    >
+                        Create my account <span aria-hidden="true">→</span>
+                    </button>
+
+                </form>
+
+
+                <p class="auth-switch">
+                    Already have an account?
+                    <a href="login.html">Log in</a>
+                </p>
+
+                <p class="privacy-note">
+                    This is the frontend prototype. Account creation
+                    will be connected to secure server-side
+                    authentication in a later stage.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+        "use strict";
+
+        const registerForm = document.getElementById("register-form");
+        const errorBox = document.getElementById("form-error");
+        const successBox = document.getElementById("form-success");
+
+        function showError(message) {
+            errorBox.textContent = message;
+            errorBox.classList.add("visible");
+            successBox.classList.remove("visible");
+        }
+
+        function hideMessages() {
+            errorBox.classList.remove("visible");
+            successBox.classList.remove("visible");
+            errorBox.textContent = "";
+            successBox.textContent = "";
+        }
+
+        document.querySelectorAll("[data-toggle-password]").forEach((button) => {
+            button.addEventListener("click", () => {
+                const inputId = button.dataset.togglePassword;
+                const input = document.getElementById(inputId);
+
+                if (!input) {
+                    return;
+                }
+
+                const shouldShow = input.type === "password";
+
+                input.type = shouldShow ? "text" : "password";
+                button.textContent = shouldShow ? "Hide" : "Show";
+                button.setAttribute("aria-pressed", String(shouldShow));
+            });
+        });
+
+        registerForm.addEventListener("input", hideMessages);
+
+        registerForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            hideMessages();
+
+            if (!registerForm.reportValidity()) {
+                return;
+            }
+
+            const fullName = document
+                .getElementById("full-name")
+                .value
+                .trim();
+
+            const email = document
+                .getElementById("email")
+                .value
+                .trim();
+
+            const password = document.getElementById("password").value;
+            const confirmPassword =
+                document.getElementById("confirm-password").value;
+
+            if (fullName.length < 2) {
+                showError("Please enter a name containing at least 2 characters.");
+                return;
+            }
+
+            if (password.length < 8) {
+                showError("Your password must contain at least 8 characters.");
+                return;
+            }
+
+            if (password !== confirmPassword) {
+                showError("Your passwords do not match. Please check them.");
+                return;
+            }
+
+            /*
+             * Frontend prototype only:
+             * Never save the password to localStorage or sessionStorage.
+             * Real account creation will be handled by Flask.
+             */
+
+            successBox.textContent =
+                "Your form is valid! Account creation is not connected yet. " +
+                "Next, we'll connect this page to the login flow and dashboard.";
+
+            successBox.classList.add("visible");
+        });
+    </script>
+
+</body>
+</html>

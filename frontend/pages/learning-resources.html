@@ -1,0 +1,108 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Learning Library | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/learning-resources.css">
+
+    <script src="../js/learning-resources.js" defer></script>
+</head>
+
+<body class="learning-library-page">
+
+    <header class="library-header">
+        <a href="/dashboard" class="library-brand">
+            <span class="brand-mark">r.</span>
+            <span>RootLearn</span>
+        </a>
+
+        <nav class="library-nav" aria-label="Main navigation">
+            <a href="/dashboard">Dashboard</a>
+            <a href="/prerequisite-map">Topic map</a>
+        </nav>
+    </header>
+
+    <main class="library-main">
+
+        <section class="library-hero">
+            <p class="library-eyebrow">YOUR PERSONAL LEARNING SPACE</p>
+
+            <h1>Grow your understanding,<br>
+                <span>one concept at a time.</span>
+            </h1>
+
+            <p class="library-description">
+                Explore explanations, watch helpful videos, and practise
+                the concepts that will strengthen your foundations.
+            </p>
+
+            <div class="library-search">
+                <span aria-hidden="true">⌕</span>
+                <input
+                    type="search"
+                    id="resourceSearch"
+                    placeholder="Find a topic or resource..."
+                    aria-label="Search topics and resources"
+                >
+            </div>
+        </section>
+
+        <section class="library-content">
+
+            <div class="library-section-heading">
+                <div>
+                    <p class="library-eyebrow">EXPLORE & DISCOVER</p>
+                    <h2>Your learning library</h2>
+                </div>
+
+                <span id="resourceCount" class="resource-count">
+                    Loading resources...
+                </span>
+            </div>
+
+            <div id="topicFilters" class="topic-filters"
+                 aria-label="Filter resources by topic">
+                <button type="button"
+                        class="topic-filter active"
+                        data-topic="all"
+                        aria-pressed="true">
+                    All topics
+                </button>
+            </div>
+
+            <div id="resourceMessage" class="resource-message"
+                 role="status" aria-live="polite">
+                Preparing your learning library...
+            </div>
+
+            <div id="resourceGrid" class="resource-grid"></div>
+
+        </section>
+
+        <section class="library-note">
+            <span class="library-note-icon" aria-hidden="true">✳</span>
+            <div>
+                <h2>Learning is a process, not a race.</h2>
+                <p>
+                    Start with what feels unfamiliar. Build your foundation,
+                    practise at your own pace, and return to your diagnostic
+                    when you're ready to see your progress.
+                </p>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="library-footer">
+        <span>© RootLearn</span>
+        <span>Understand the roots. Grow with confidence.</span>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Prerequisite Map | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/prerequisite-map.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+</head>
+
+<body class="prerequisite-page">
+
+    <header class="prerequisite-header">
+        <a href="dashboard.html" class="brand">
+            <span class="brand-mark">R</span>
+            <span>RootLearn</span>
+        </a>
+
+        <nav class="prerequisite-nav">
+            <a href="dashboard.html">Dashboard</a>
+            <a href="learning-path.html">Learning Path</a>
+            <a href="prerequisite-map.html" class="active">Prerequisite Map</a>
+        </nav>
+    </header>
+
+    <main class="prerequisite-main">
+
+        <section class="map-intro">
+            <span class="eyebrow">YOUR LEARNING BLUEPRINT</span>
+
+            <h1>See how your <span>knowledge connects.</span></h1>
+
+            <p>
+                Every concept builds on something you already know.
+                Explore the relationships between Python topics and discover
+                what to learn next.
+            </p>
+        </section>
+
+        <section class="map-toolbar">
+
+            <div class="map-search">
+                <label for="topicSearch">Find a topic</label>
+
+                <input
+                    type="search"
+                    id="topicSearch"
+                    placeholder="Try Variables, Loops, Functions..."
+                    autocomplete="off"
+                >
+            </div>
+
+            <div class="map-actions">
+                <button type="button" id="showAllBtn" class="secondary-btn">
+                    Show all topics
+                </button>
+
+                <button type="button" id="resetMapBtn" class="primary-btn">
+                    Reset map
+                </button>
+            </div>
+
+        </section>
+
+        <section class="map-legend" aria-label="Map legend">
+            <div>
+                <span class="legend-dot foundation"></span>
+                Foundation
+            </div>
+
+            <div>
+                <span class="legend-dot intermediate"></span>
+                Intermediate
+            </div>
+
+            <div>
+                <span class="legend-line"></span>
+                Prerequisite connection
+            </div>
+        </section>
+
+        <section class="map-layout">
+
+            <div class="map-canvas-card">
+
+                <div class="map-card-heading">
+                    <div>
+                        <span class="eyebrow">PYTHON PROGRAMMING</span>
+                        <h2>Concept connections</h2>
+                    </div>
+
+                    <span class="topic-count" id="topicCount">
+                        10 topics
+                    </span>
+                </div>
+
+                <div
+                    id="prerequisiteNetwork"
+                    role="img"
+                    aria-label="Interactive graph showing connections between Python topics"
+                ></div>
+
+                <p class="map-hint">
+                    Select a topic to explore its prerequisite connections.
+                    Drag the nodes to arrange your map.
+                </p>
+
+            </div>
+
+            <aside class="topic-detail-card" id="topicDetails">
+
+                <span class="eyebrow">TOPIC EXPLORER</span>
+
+                <div class="detail-placeholder" id="detailPlaceholder">
+                    <div class="placeholder-icon">✳</div>
+
+                    <h2>Your next discovery</h2>
+
+                    <p>
+                        Select any topic on the map to discover what you
+                        should understand before learning it.
+                    </p>
+                </div>
+
+                <div id="detailContent" hidden>
+
+                    <span class="topic-level" id="topicLevel"></span>
+
+                    <h2 id="selectedTopicName"></h2>
+
+                    <p id="selectedTopicDescription"></p>
+
+                    <div class="detail-section">
+                        <h3>Learn these first</h3>
+                        <div id="prerequisiteList"></div>
+                    </div>
+
+                    <div class="detail-section">
+                        <h3>Builds towards</h3>
+                        <div id="dependentList"></div>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="primary-btn resource-btn"
+                        id="viewResourcesBtn"
+                    >
+                        Explore learning resources →
+                    </button>
+
+                </div>
+
+            </aside>
+
+        </section>
+
+        <section class="map-note">
+            <span class="note-icon">✦</span>
+
+            <p>
+                <strong>Remember:</strong>
+                prerequisites show how concepts relate to one another.
+                Your personal strengths and learning gaps will appear here
+                after we connect your diagnostic test results.
+            </p>
+        </section>
+
+    </main>
+
+    <script src="../js/prerequisite-map.js"></script>
+
+</body>
+</html>

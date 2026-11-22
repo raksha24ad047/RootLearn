@@ -1,0 +1,238 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explore your personalized Python learning path with RootLearn.">
+    <title>Python Learning Path | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/learning-path.css">
+</head>
+
+<body class="learning-path-page">
+
+    <div class="dashboard-layout">
+
+        <!-- Sidebar -->
+        <aside class="dashboard-sidebar" id="dashboardSidebar">
+            <a href="../index.html" class="brand">
+                <span class="brand-mark">R</span>
+                <span>RootLearn</span>
+            </a>
+
+            <p class="sidebar-label">YOUR WORKSPACE</p>
+
+            <nav class="sidebar-nav" aria-label="Main navigation">
+                <a href="dashboard.html" class="sidebar-link">
+                    <span>◫</span> Overview
+                </a>
+
+                <a href="learning-path.html"
+                   class="sidebar-link active"
+                   aria-current="page">
+                    <span>⌘</span> Learning path
+                </a>
+
+                <a href="dashboard.html#learning-gaps" class="sidebar-link">
+                    <span>◎</span> Learning gaps
+                </a>
+
+                <a href="dashboard.html#progress" class="sidebar-link">
+                    <span>↗</span> My progress
+                </a>
+
+                <a href="dashboard.html#recent-activity" class="sidebar-link">
+                    <span>◷</span> Recent activity
+                </a>
+            </nav>
+
+            <div class="sidebar-bottom">
+                <div class="sidebar-note">
+                    <span class="sidebar-note-icon">✳</span>
+                    <h3>Small steps count.</h3>
+                    <p>Build your understanding one concept at a time.</p>
+                </div>
+
+                <a href="../index.html" class="sidebar-link">
+                    <span>↩</span> Back to home
+                </a>
+            </div>
+        </aside>
+
+        <!-- Main content -->
+        <main class="dashboard-main learning-main">
+
+            <header class="dashboard-topbar">
+                <button
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    type="button"
+                    aria-label="Open navigation"
+                    aria-expanded="false">
+                    ☰
+                </button>
+
+                <div class="breadcrumb">
+                    <span>My workspace</span>
+                    <span>/</span>
+                    <strong>Learning path</strong>
+                </div>
+
+                <span class="course-pill">
+                    <span class="status-dot"></span>
+                    Python foundations
+                </span>
+            </header>
+
+            <!-- Page introduction -->
+            <section class="learning-hero">
+                <div class="learning-hero-copy">
+                    <span class="eyebrow">YOUR PERSONALIZED ROADMAP</span>
+                    <h1>Learn Python,<br><span>one concept at a time.</span></h1>
+                    <p>
+                        Explore the concepts that build your Python knowledge.
+                        Understand the foundations, discover what comes next,
+                        and track your learning journey as you go.
+                    </p>
+
+                    <a href="#topicLibrary" class="button button-primary">
+                        Explore topics <span aria-hidden="true">↓</span>
+                    </a>
+                </div>
+
+                <div class="learning-hero-art" aria-hidden="true">
+                    <div class="orbit orbit-one"></div>
+                    <div class="orbit orbit-two"></div>
+
+                    <div class="learning-art-card art-card-back">
+                        <span>01</span>
+                        <div class="art-lines">
+                            <i></i><i></i><i></i>
+                        </div>
+                    </div>
+
+                    <div class="learning-art-card art-card-front">
+                        <span class="art-sparkle">✳</span>
+                        <span class="art-code-label">PYTHON / 01</span>
+                        <div class="art-code">
+                            <span>name</span> <b>=</b> <em>"you"</em>
+                        </div>
+                        <p>Every expert starts somewhere.</p>
+                    </div>
+
+                    <span class="floating-dot dot-one"></span>
+                    <span class="floating-dot dot-two"></span>
+                    <span class="floating-star">✳</span>
+                </div>
+            </section>
+
+            <!-- Summary -->
+            <section class="learning-summary" aria-label="Learning path summary">
+                <article class="learning-summary-card">
+                    <span class="summary-icon">▤</span>
+                    <div>
+                        <span class="summary-label">AVAILABLE TOPICS</span>
+                        <strong id="totalTopics">10</strong>
+                    </div>
+                </article>
+
+                <article class="learning-summary-card">
+                    <span class="summary-icon summary-icon-rose">✓</span>
+                    <div>
+                        <span class="summary-label">COMPLETED</span>
+                        <strong id="completedTopics">0</strong>
+                    </div>
+                </article>
+
+                <article class="learning-summary-card">
+                    <span class="summary-icon summary-icon-gold">↗</span>
+                    <div>
+                        <span class="summary-label">IN PROGRESS</span>
+                        <strong id="inProgressTopics">0</strong>
+                    </div>
+                </article>
+            </section>
+
+            <!-- Roadmap -->
+            <section class="learning-section" id="topicLibrary">
+                <div class="section-heading">
+                    <div>
+                        <span class="eyebrow">THE ROADMAP</span>
+                        <h2>Your Python topics</h2>
+                        <p>Start with the basics and gradually build on what you know.</p>
+                    </div>
+
+                    <label class="topic-search">
+                        <span aria-hidden="true">⌕</span>
+                        <input
+                            type="search"
+                            id="topicSearch"
+                            placeholder="Find a topic..."
+                            aria-label="Search Python topics">
+                    </label>
+                </div>
+
+                <div class="topic-filters" aria-label="Filter topics">
+                    <button type="button" class="topic-filter active"
+                            data-filter="all" aria-pressed="true">
+                        All topics
+                    </button>
+                    <button type="button" class="topic-filter"
+                            data-filter="not-started" aria-pressed="false">
+                        Not started
+                    </button>
+                    <button type="button" class="topic-filter"
+                            data-filter="in-progress" aria-pressed="false">
+                        In progress
+                    </button>
+                    <button type="button" class="topic-filter"
+                            data-filter="completed" aria-pressed="false">
+                        Completed
+                    </button>
+                </div>
+
+                <div class="topic-grid" id="topicGrid">
+                    <!-- Topic cards are added by learning-path.js -->
+                </div>
+
+                <div class="topic-empty-state" id="topicEmptyState" hidden>
+                    <span>⌕</span>
+                    <h3>No topics found</h3>
+                    <p>Try a different search or choose another filter.</p>
+                </div>
+            </section>
+
+            <!-- Prerequisite explanation -->
+            <section class="prerequisite-banner">
+                <div class="prerequisite-icon" aria-hidden="true">↗</div>
+                <div>
+                    <span class="eyebrow">LEARN WITH UNDERSTANDING</span>
+                    <h2>Every concept connects.</h2>
+                    <p>
+                        Some Python topics rely on skills you learn earlier.
+                        RootLearn will use these prerequisite relationships
+                        to help identify learning gaps and guide your next steps.
+                    </p>
+                </div>
+            </section>
+
+            <footer class="dashboard-footer">
+                <span>© <span id="learningYear"></span> RootLearn</span>
+                <span>Understand the roots. Grow your skills.</span>
+            </footer>
+
+        </main>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="dashboard-toast" id="learningToast"
+         role="status" aria-live="polite"></div>
+
+    <script src="../js/learning-path.js"></script>
+</body>
+</html>

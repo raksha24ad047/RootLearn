@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Log in to RootLearn to continue your personalized learning journey."
+    >
+
+    <title>Log In | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+
+    <style>
+        .login-layout {
+            min-height: 100vh;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .login-story {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            padding: 42px clamp(28px, 5vw, 76px);
+            background: #EDE3DB;
+        }
+
+        .login-story .brand {
+            color: var(--color-primary);
+        }
+
+        .login-story-content {
+            max-width: 500px;
+            margin-block: 60px;
+        }
+
+        .login-story-content h1 {
+            margin: 25px 0;
+            font-size: clamp(2.7rem, 4.5vw, 4.4rem);
+        }
+
+        .login-story-content h1 em {
+            color: var(--color-primary);
+        }
+
+        .login-story-content > p {
+            max-width: 440px;
+            line-height: 1.9;
+        }
+
+        .login-quote {
+            margin-top: 35px;
+            padding: 22px;
+            border-left: 3px solid var(--color-accent);
+            background: rgba(255, 255, 255, 0.58);
+            border-radius: 0 12px 12px 0;
+        }
+
+        .login-quote p {
+            margin: 0 0 9px;
+            color: var(--color-text);
+            font-family: "Playfair Display", Georgia, serif;
+            font-size: 1.2rem;
+        }
+
+        .login-quote span {
+            color: var(--color-text-muted);
+            font-size: 0.78rem;
+        }
+
+        .login-story-footer {
+            color: var(--color-text-muted);
+            font-size: 0.8rem;
+        }
+
+        .login-form-side {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 48px 24px;
+            background: var(--color-bg);
+        }
+
+        .login-form-container {
+            width: min(100%, 420px);
+        }
+
+        .login-mobile-brand {
+            display: none;
+            margin-bottom: 40px;
+        }
+
+        .login-heading {
+            margin-bottom: 12px;
+            font-size: clamp(2.4rem, 4vw, 3.2rem);
+        }
+
+        .login-subtitle {
+            margin-bottom: 34px;
+            line-height: 1.8;
+        }
+
+        .login-form {
+            display: grid;
+            gap: 22px;
+        }
+
+        .login-field {
+            display: grid;
+            gap: 8px;
+        }
+
+        .login-field label {
+            color: var(--color-text);
+            font-size: 0.86rem;
+            font-weight: 700;
+        }
+
+        .login-field input {
+            width: 100%;
+            min-height: 51px;
+            padding: 12px 15px;
+            border: 1px solid var(--color-border);
+            border-radius: 12px;
+            background: white;
+            color: var(--color-text);
+        }
+
+        .login-field input:focus {
+            outline: 3px solid rgba(99, 59, 82, 0.12);
+            border-color: var(--color-primary);
+        }
+
+        .login-password-wrap {
+            position: relative;
+        }
+
+        .login-password-wrap input {
+            padding-right: 75px;
+        }
+
+        .login-password-toggle {
+            position: absolute;
+            top: 50%;
+            right: 13px;
+            transform: translateY(-50%);
+            border: none;
+            background: transparent;
+            color: var(--color-primary);
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+
+        .login-error,
+        .login-success {
+            display: none;
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+        }
+
+        .login-error {
+            border: 1px solid #E7B9B5;
+            background: #FFF0EE;
+            color: #8F3434;
+        }
+
+        .login-success {
+            border: 1px solid #C6D8C6;
+            background: #EEF5EC;
+            color: #355A3B;
+        }
+
+        .login-error.visible,
+        .login-success.visible {
+            display: block;
+        }
+
+        .login-submit {
+            width: 100%;
+            min-height: 52px;
+        }
+
+        .login-switch {
+            margin-top: 27px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+
+        .login-switch a {
+            color: var(--color-primary);
+            font-weight: 700;
+        }
+
+        .login-switch a:hover {
+            text-decoration: underline;
+        }
+
+        .login-disclaimer {
+            margin-top: 25px;
+            font-size: 0.76rem;
+            line-height: 1.8;
+            text-align: center;
+        }
+
+        @media (max-width: 850px) {
+            .login-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .login-story {
+                display: none;
+            }
+
+            .login-form-side {
+                min-height: 100vh;
+                padding: 38px 22px;
+            }
+
+            .login-mobile-brand {
+                display: inline-flex;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="login-layout">
+
+        <section class="login-story" aria-label="Welcome to RootLearn">
+
+            <a href="../index.html" class="brand">
+                <span class="brand-mark" aria-hidden="true">R</span>
+                <span>rootlearn</span>
+            </a>
+
+            <div class="login-story-content">
+
+                <span class="eyebrow">Welcome back</span>
+
+                <h1>
+                    Your progress<br>
+                    is worth <em>continuing.</em>
+                </h1>
+
+                <p>
+                    Pick up where you left off, revisit the concepts
+                    that matter, and keep building a stronger
+                    foundation in Python.
+                </p>
+
+                <div class="login-quote">
+                    <p>
+                        "You don't need to learn everything at once.
+                        You need to know what comes next."
+                    </p>
+
+                    <span>The RootLearn approach</span>
+                </div>
+
+            </div>
+
+            <p class="login-story-footer">
+                One concept at a time. One step closer.
+            </p>
+
+        </section>
+
+
+        <section class="login-form-side">
+
+            <div class="login-form-container">
+
+                <a href="../index.html" class="brand login-mobile-brand">
+                    <span class="brand-mark" aria-hidden="true">R</span>
+                    <span>rootlearn</span>
+                </a>
+
+                <span class="eyebrow">Your learning space</span>
+
+                <h1 class="login-heading">
+                    Welcome back.
+                </h1>
+
+                <p class="login-subtitle">
+                    Log in to continue your personalized learning journey.
+                </p>
+
+                <div
+                    id="login-error"
+                    class="login-error"
+                    role="alert"
+                    aria-live="polite"
+                ></div>
+
+                <div
+                    id="login-success"
+                    class="login-success"
+                    role="status"
+                    aria-live="polite"
+                ></div>
+
+                <form id="login-form" class="login-form">
+
+                    <div class="login-field">
+                        <label for="login-email">Email address</label>
+
+                        <input
+                            id="login-email"
+                            name="email"
+                            type="email"
+                            placeholder="you@example.com"
+                            autocomplete="email"
+                            maxlength="254"
+                            required
+                        >
+                    </div>
+
+
+                    <div class="login-field">
+                        <label for="login-password">Password</label>
+
+                        <div class="login-password-wrap">
+
+                            <input
+                                id="login-password"
+                                name="password"
+                                type="password"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                                maxlength="128"
+                                required
+                            >
+
+                            <button
+                                class="login-password-toggle"
+                                type="button"
+                                id="toggle-login-password"
+                                aria-pressed="false"
+                            >
+                                Show
+                            </button>
+
+                        </div>
+                    </div>
+
+
+                    <button
+                        class="button button-primary login-submit"
+                        type="submit"
+                    >
+                        Log in <span aria-hidden="true">→</span>
+                    </button>
+
+                </form>
+
+
+                <p class="login-switch">
+                    New to RootLearn?
+                    <a href="register.html">Create an account</a>
+                </p>
+
+                <p class="login-disclaimer">
+                    Authentication is not connected yet.
+                    We'll implement secure login using Flask
+                    and the RootLearn database.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <script>
+        "use strict";
+
+        const loginForm = document.getElementById("login-form");
+        const loginError = document.getElementById("login-error");
+        const loginSuccess = document.getElementById("login-success");
+
+        const passwordInput = document.getElementById("login-password");
+        const passwordToggle = document.getElementById("toggle-login-password");
+
+        function clearLoginMessages() {
+            loginError.textContent = "";
+            loginSuccess.textContent = "";
+
+            loginError.classList.remove("visible");
+            loginSuccess.classList.remove("visible");
+        }
+
+        loginForm.addEventListener("input", clearLoginMessages);
+
+        passwordToggle.addEventListener("click", () => {
+            const shouldShow = passwordInput.type === "password";
+
+            passwordInput.type = shouldShow ? "text" : "password";
+            passwordToggle.textContent = shouldShow ? "Hide" : "Show";
+
+            passwordToggle.setAttribute(
+                "aria-pressed",
+                String(shouldShow)
+            );
+        });
+
+        loginForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            clearLoginMessages();
+
+            if (!loginForm.reportValidity()) {
+                return;
+            }
+
+            loginError.textContent =
+                "Login isn't connected yet. We'll enable account verification " +
+                "after implementing the Flask backend.";
+
+            loginError.classList.add("visible");
+        });
+    </script>
+
+</body>
+</html>

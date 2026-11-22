@@ -1,0 +1,55 @@
+/* =========================================
+   ROOTLEARN — DESIGN TOKENS
+   ========================================= */
+
+:root {
+    /* Brand colours */
+    --color-bg: #FAF7F2;
+    --color-primary: #633B52;
+    --color-primary-dark: #48283B;
+    --color-accent: #C76D52;
+    --color-accent-soft: #EBD7D3;
+
+    /* Surfaces */
+    --color-surface: #FFFFFF;
+    --color-border: #E9E0D7;
+
+    /* Text */
+    --color-text: #28242B;
+    --color-text-muted: #827873;
+
+    /* Status colours */
+    --color-success: #54765B;
+    --color-warning: #A66B32;
+    --color-danger: #B64A4A;
+
+    /* Typography */
+    --font-heading: Georgia, "Times New Roman", serif;
+    --font-body: "Segoe UI", Arial, sans-serif;
+
+    /* Spacing */
+    --space-1: 0.25rem;
+    --space-2: 0.5rem;
+    --space-3: 0.75rem;
+    --space-4: 1rem;
+    --space-5: 1.5rem;
+    --space-6: 2rem;
+    --space-7: 3rem;
+    --space-8: 4rem;
+
+    /* Corners */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-pill: 999px;
+
+    /* Shadows */
+    --shadow-soft: 0 8px 30px rgba(40, 36, 43, 0.06);
+    --shadow-hover: 0 14px 36px rgba(40, 36, 43, 0.10);
+
+    /* Layout */
+    --container-width: 1180px;
+
+    /* Motion */
+    --transition-fast: 180ms ease;
+}

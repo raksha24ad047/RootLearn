@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta
+        name="description"
+        content="Your personalized RootLearn student dashboard."
+    >
+
+    <title>Student Dashboard | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+
+<body class="dashboard-body">
+
+    <div class="dashboard-layout">
+
+        <!-- SIDEBAR -->
+        <aside class="dashboard-sidebar" id="dashboardSidebar">
+
+            <a href="../index.html" class="dashboard-brand">
+                <span class="brand-mark">R</span>
+
+                <span>
+                    <strong>RootLearn</strong>
+                    <small>Learn from the roots</small>
+                </span>
+            </a>
+
+            <div class="sidebar-label">WORKSPACE</div>
+
+            <nav class="sidebar-navigation" aria-label="Dashboard navigation">
+
+                <a href="#overview" class="sidebar-link active">
+                    <span class="sidebar-icon">⌂</span>
+                    <span>Overview</span>
+                </a>
+
+                <a href="#learning-path" class="sidebar-link">
+                    <span class="sidebar-icon">▤</span>
+                    <span>My learning path</span>
+                </a>
+
+                <a href="#learning-gaps" class="sidebar-link">
+                    <span class="sidebar-icon">◎</span>
+                    <span>Learning gaps</span>
+                    <span class="sidebar-count">3</span>
+                </a>
+
+                <a href="#progress" class="sidebar-link">
+                    <span class="sidebar-icon">↗</span>
+                    <span>My progress</span>
+                </a>
+
+                <a href="#recent-activity" class="sidebar-link">
+                    <span class="sidebar-icon">◷</span>
+                    <span>Recent activity</span>
+                </a>
+
+            </nav>
+
+            <div class="sidebar-bottom">
+
+                <div class="sidebar-help-card">
+                    <span class="help-icon">✳</span>
+
+                    <h3>Small steps matter.</h3>
+
+                    <p>
+                        Every concept you strengthen brings you
+                        closer to your learning goals.
+                    </p>
+
+                    <a href="#learning-path">
+                        Continue learning →
+                    </a>
+                </div>
+
+                <a href="../index.html" class="sidebar-logout">
+                    <span>↩</span>
+                    Back to home
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- MAIN CONTENT -->
+        <main class="dashboard-main" id="overview">
+
+            <!-- TOP BAR -->
+            <header class="dashboard-topbar">
+
+                <button
+                    type="button"
+                    class="mobile-menu-button"
+                    id="mobileMenuButton"
+                    aria-label="Toggle navigation menu"
+                    aria-expanded="false"
+                    aria-controls="dashboardSidebar"
+                >
+                    ☰
+                </button>
+
+                <div class="breadcrumb">
+                    Workspace <span>/</span> Overview
+                </div>
+
+                <div class="topbar-actions">
+
+                    <span class="demo-badge">
+                        DEMO DASHBOARD
+                    </span>
+
+                    <div class="student-avatar" aria-label="Student profile">
+                        S
+                    </div>
+
+                </div>
+
+            </header>
+
+
+            <!-- WELCOME -->
+            <section class="welcome-section">
+
+                <div class="welcome-copy">
+
+                    <div class="eyebrow">
+                        YOUR LEARNING SPACE
+                    </div>
+
+                    <h1>
+                        Every expert was once
+                        <span>a beginner.</span>
+                    </h1>
+
+                    <p>
+                        Welcome back, Student! Let's find what you
+                        already know, strengthen what you don't,
+                        and keep moving forward.
+                    </p>
+
+                    <a href="#learning-path" class="button button-primary">
+                        Continue learning <span aria-hidden="true">↗</span>
+                    </a>
+
+                </div>
+
+                <div class="welcome-art" aria-hidden="true">
+
+                    <div class="art-orbit orbit-one"></div>
+                    <div class="art-orbit orbit-two"></div>
+
+                    <div class="art-center">
+                        <span>R</span>
+                    </div>
+
+                    <div class="art-floating art-book">▤</div>
+                    <div class="art-floating art-sparkle">✳</div>
+                    <div class="art-floating art-check">✓</div>
+
+                    <div class="art-caption">
+                        <strong>One concept at a time.</strong>
+                        <span>Your journey, your pace.</span>
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- LEARNING OVERVIEW -->
+            <section class="dashboard-section">
+
+                <div class="section-heading">
+
+                    <div>
+                        <div class="eyebrow">YOUR OVERVIEW</div>
+                        <h2>Your learning at a glance</h2>
+                    </div>
+
+                    <span class="sample-note">
+                        Sample data
+                    </span>
+
+                </div>
+
+                <div class="stats-grid">
+
+                    <article class="stat-card">
+                        <div class="stat-card-top">
+                            <span class="stat-icon plum-icon">▤</span>
+                            <span class="stat-trend">Your activity</span>
+                        </div>
+
+                        <div class="stat-number" id="testsCompleted">4</div>
+                        <h3>Tests completed</h3>
+                        <p>Diagnostic and practice tests</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-card-top">
+                            <span class="stat-icon rose-icon">◎</span>
+                            <span class="stat-trend">Keep exploring</span>
+                        </div>
+
+                        <div class="stat-number" id="topicsStudied">6</div>
+                        <h3>Topics explored</h3>
+                        <p>Python concepts you've studied</p>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-card-top">
+                            <span class="stat-icon green-icon">✓</span>
+                            <span class="stat-trend">Room to grow</span>
+                        </div>
+
+                        <div class="stat-number">
+                            <span id="overallProgress">68</span><small>%</small>
+                        </div>
+
+                        <h3>Learning progress</h3>
+
+                        <div
+                            class="mini-progress"
+                            role="progressbar"
+                            aria-label="Overall learning progress"
+                            aria-valuemin="0"
+                            aria-valuemax="100"
+                            aria-valuenow="68"
+                            id="overallProgressBar"
+                        >
+                            <span style="width: 68%"></span>
+                        </div>
+                    </article>
+
+                    <article class="stat-card">
+                        <div class="stat-card-top">
+                            <span class="stat-icon orange-icon">✳</span>
+                            <span class="stat-trend">Focus area</span>
+                        </div>
+
+                        <div class="stat-number" id="gapsCount">3</div>
+                        <h3>Topics to strengthen</h3>
+                        <p>Personalized learning priorities</p>
+                    </article>
+
+                </div>
+
+            </section>
+
+
+            <!-- LEARNING PATH AND GAPS -->
+            <div class="dashboard-content-grid">
+
+                <section
+                    class="dashboard-panel learning-panel"
+                    id="learning-path"
+                >
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div>
+                            <h2>Your learning path</h2>
+                        </div>
+
+                        <span class="panel-decoration">01 — 05</span>
+
+                    </div>
+
+                    <p class="panel-description">
+                        Build your Python foundations, one connected
+                        concept at a time.
+                    </p>
+
+                    <div class="learning-path-list" id="learningPathList">
+
+                        <!-- Populated by dashboard.js -->
+
+                    </div>
+
+                    <a href="#learning-path" class="text-link" id="viewTopicsButton">
+                        Explore all topics <span aria-hidden="true">→</span>
+                    </a>
+
+                </section>
+
+
+                <section
+                    class="dashboard-panel gaps-panel"
+                    id="learning-gaps"
+                >
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <div class="eyebrow">PERSONALIZED INSIGHTS</div>
+                            <h2>Let's strengthen these</h2>
+                        </div>
+
+                        <span class="gap-heading-icon">◎</span>
+
+                    </div>
+
+                    <p class="panel-description">
+                        These sample topics need a little more attention.
+                    </p>
+
+                    <div class="gap-list" id="learningGapsList">
+
+                        <!-- Populated by dashboard.js -->
+
+                    </div>
+
+                    <div class="encouragement-box">
+                        <span>✦</span>
+
+                        <p>
+                            A learning gap isn't a failure.
+                            It's your next opportunity to grow.
+                        </p>
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- PROGRESS AND ACTIVITY -->
+            <div class="dashboard-content-grid lower-grid">
+
+                <section
+                    class="dashboard-panel progress-panel"
+                    id="progress"
+                >
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <div class="eyebrow">YOUR GROWTH</div>
+                            <h2>Progress snapshot</h2>
+                        </div>
+
+                        <span class="progress-period">5 topics</span>
+
+                    </div>
+
+                    <p class="panel-description">
+                        A sample view of your current understanding
+                        of each Python topic.
+                    </p>
+
+                    <div
+                        class="topic-progress-list"
+                        id="topicProgressList"
+                    >
+                        <!-- Populated by dashboard.js -->
+                    </div>
+
+                    <div class="chart-legend">
+                        <span class="legend-dot mastered-dot"></span>
+                        Stronger understanding
+
+                        <span class="legend-dot developing-dot"></span>
+                        Needs practice
+                    </div>
+
+                </section>
+
+
+                <section
+                    class="dashboard-panel activity-panel"
+                    id="recent-activity"
+                >
+
+                    <div class="panel-heading">
+
+                        <div>
+                            <div class="eyebrow">YOUR JOURNEY SO FAR</div>
+                            <h2>Recent activity</h2>
+                        </div>
+
+                    </div>
+
+                    <div class="activity-list" id="recentActivityList">
+                        <!-- Populated by dashboard.js -->
+                    </div>
+
+                    <div class="activity-footer">
+                        <span class="activity-status-dot"></span>
+                        You're building your foundation.
+                    </div>
+
+                </section>
+
+            </div>
+
+
+            <!-- BOTTOM CALL TO ACTION -->
+            <section class="dashboard-cta">
+
+                <div class="cta-symbol" aria-hidden="true">✳</div>
+
+                <div class="cta-copy">
+                    <div class="eyebrow">YOUR NEXT CHAPTER</div>
+
+                    <h2>Ready to discover what you know?</h2>
+
+                    <p>
+                        A diagnostic test can help identify the concepts
+                        you understand and the ones worth revisiting.
+                    </p>
+                </div>
+
+                <button
+                    type="button"
+                    class="button button-light"
+                    id="startDiagnosticButton"
+                >
+                    Start a diagnostic <span aria-hidden="true">↗</span>
+                </button>
+
+            </section>
+
+
+            <footer class="dashboard-footer">
+                <span>© <span id="dashboardYear"></span> RootLearn</span>
+                <span>Understand the roots. Grow with confidence.</span>
+            </footer>
+
+        </main>
+
+    </div>
+
+
+    <!-- FEEDBACK MESSAGE -->
+    <div
+        class="dashboard-toast"
+        id="dashboardToast"
+        role="status"
+        aria-live="polite"
+    ></div>
+
+    <script src="../js/dashboard.js"></script>
+
+</body>
+</html>
