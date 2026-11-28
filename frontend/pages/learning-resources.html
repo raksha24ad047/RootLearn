@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,28 +9,60 @@
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/learning-resources.css">
+    <link rel="stylesheet" href="../css/theme-pages.css">
 
-    <script src="../js/learning-resources.js" defer></script>
+    <style>
+        .library-subject-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin-top: 14px;
+        }
+        .library-subject-select {
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: #fff;
+            font-size: 0.95rem;
+            min-width: 220px;
+        }
+        .resource-card {
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: 14px;
+            padding: 18px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        .resource-card a {
+            font-weight: 600;
+            text-decoration: none;
+        }
+    </style>
 </head>
 
 <body class="learning-library-page">
 
     <header class="library-header">
-        <a href="/dashboard" class="library-brand">
+        <a href="/dashboard" class="library-brand" id="libBrandLink">
             <span class="brand-mark">r.</span>
             <span>RootLearn</span>
         </a>
 
         <nav class="library-nav" aria-label="Main navigation">
-            <a href="/dashboard">Dashboard</a>
-            <a href="/prerequisite-map">Topic map</a>
+            <a href="/dashboard" id="libDashboardLink">Dashboard</a>
+            <a href="/prerequisite-map" id="libMapLink">Topic map</a>
+            <a href="/retest" id="libRetestLink">Retest</a>
         </nav>
     </header>
 
     <main class="library-main">
 
         <section class="library-hero">
-            <p class="library-eyebrow">YOUR PERSONAL LEARNING SPACE</p>
+            <p class="library-eyebrow" id="libSubjectEyebrow">YOUR PERSONAL LEARNING SPACE</p>
 
             <h1>Grow your understanding,<br>
                 <span>one concept at a time.</span>
@@ -41,6 +72,13 @@
                 Explore explanations, watch helpful videos, and practise
                 the concepts that will strengthen your foundations.
             </p>
+
+            <div class="library-subject-bar">
+                <label for="librarySubjectSelect"><strong>Subject:</strong></label>
+                <select id="librarySubjectSelect" class="library-subject-select">
+                    <option value="">All subjects</option>
+                </select>
+            </div>
 
             <div class="library-search">
                 <span aria-hidden="true">⌕</span>
@@ -91,8 +129,8 @@
                 <h2>Learning is a process, not a race.</h2>
                 <p>
                     Start with what feels unfamiliar. Build your foundation,
-                    practise at your own pace, and return to your diagnostic
-                    when you're ready to see your progress.
+                    practise at your own pace, and take a retest when you're
+                    ready to see your progress.
                 </p>
             </div>
         </section>
@@ -104,5 +142,172 @@
         <span>Understand the roots. Grow with confidence.</span>
     </footer>
 
+    <script>
+        "use strict";
+
+        const params = new URLSearchParams(window.location.search);
+        let currentSubjectId = params.get("subject_id") || "";
+        let subjectsById = {};
+        let allResources = [];
+        let activeTopic = "all";
+
+        const subjectSelect = document.getElementById("librarySubjectSelect");
+        const searchInput = document.getElementById("resourceSearch");
+        const topicFiltersEl = document.getElementById("topicFilters");
+        const messageEl = document.getElementById("resourceMessage");
+        const gridEl = document.getElementById("resourceGrid");
+        const countEl = document.getElementById("resourceCount");
+
+        function escapeHtml(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, '"');
+        }
+
+        function syncNavAndUrl() {
+            const url = new URL(window.location.href);
+            if (currentSubjectId) {
+                url.searchParams.set("subject_id", currentSubjectId);
+            } else {
+                url.searchParams.delete("subject_id");
+            }
+            window.history.replaceState({}, "", url.toString());
+
+            const q = currentSubjectId ? `?subject_id=${encodeURIComponent(currentSubjectId)}` : "";
+            document.getElementById("libBrandLink").href = `/dashboard${q}`;
+            document.getElementById("libDashboardLink").href = `/dashboard${q}`;
+            document.getElementById("libMapLink").href = `/prerequisite-map${q}`;
+            document.getElementById("libRetestLink").href = `/retest${q}`;
+
+            const subj = subjectsById[String(currentSubjectId)];
+            document.getElementById("libSubjectEyebrow").textContent = subj
+                ? `${subj.subject_name.toUpperCase()} LEARNING LIBRARY`
+                : "YOUR PERSONAL LEARNING SPACE";
+        }
+
+        function renderTopicFilterButtons() {
+            const topics = [...new Set(allResources.map((r) => r.topic_name).filter(Boolean))];
+            if (!topics.some((t) => t === activeTopic)) {
+                activeTopic = "all";
+            }
+
+            topicFiltersEl.innerHTML =
+                `<button type="button" class="topic-filter ${activeTopic === "all" ? "active" : ""}" data-topic="all" aria-pressed="${activeTopic === "all"}">All topics</button>` +
+                topics
+                    .map(
+                        (t) =>
+                            `<button type="button" class="topic-filter ${activeTopic === t ? "active" : ""}" data-topic="${escapeHtml(t)}" aria-pressed="${activeTopic === t}">${escapeHtml(t)}</button>`
+                    )
+                    .join("");
+
+            topicFiltersEl.querySelectorAll(".topic-filter").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    activeTopic = btn.dataset.topic || "all";
+                    renderTopicFilterButtons();
+                    renderGrid();
+                });
+            });
+        }
+
+        function renderGrid() {
+            const term = (searchInput.value || "").trim().toLowerCase();
+            const filtered = allResources.filter((r) => {
+                const matchesTopic = activeTopic === "all" || r.topic_name === activeTopic;
+                const matchesSearch =
+                    !term ||
+                    (r.resource_title || "").toLowerCase().includes(term) ||
+                    (r.resource_description || "").toLowerCase().includes(term) ||
+                    (r.topic_name || "").toLowerCase().includes(term);
+                return matchesTopic && matchesSearch;
+            });
+
+            countEl.textContent = `${filtered.length} ${filtered.length === 1 ? "resource" : "resources"}`;
+
+            if (!filtered.length) {
+                messageEl.hidden = false;
+                messageEl.textContent = "No learning resources match this filter yet.";
+                gridEl.innerHTML = "";
+                return;
+            }
+
+            messageEl.hidden = true;
+            gridEl.innerHTML = filtered
+                .map(
+                    (r) => `
+                    <article class="resource-card">
+                        <span class="eyebrow">${escapeHtml(r.topic_name)} • ${escapeHtml(r.resource_type || "Notes")}</span>
+                        <h3>${escapeHtml(r.resource_title)}</h3>
+                        <p>${escapeHtml(r.resource_description || "")}</p>
+                        <a href="${escapeHtml(r.resource_url)}" target="_blank" rel="noopener noreferrer">
+                            Open resource →
+                        </a>
+                    </article>
+                `
+                )
+                .join("");
+        }
+
+        async function loadSubjects() {
+            try {
+                const res = await fetch("/api/subjects");
+                const data = await res.json();
+                if (res.ok && data.status === "success" && Array.isArray(data.subjects)) {
+                    subjectsById = {};
+                    data.subjects.forEach((s) => {
+                        subjectsById[String(s.subject_id)] = s;
+                    });
+                    subjectSelect.innerHTML =
+                        `<option value="">All subjects</option>` +
+                        data.subjects
+                            .map((s) => `<option value="${escapeHtml(s.subject_id)}">${escapeHtml(s.subject_name)}</option>`)
+                            .join("");
+                    if (currentSubjectId) {
+                        subjectSelect.value = String(currentSubjectId);
+                    }
+                }
+            } catch {
+                // Keep default option
+            }
+        }
+
+        async function loadResources() {
+            syncNavAndUrl();
+            activeTopic = "all";
+            messageEl.hidden = false;
+            messageEl.textContent = "Loading learning resources...";
+
+            const url = currentSubjectId
+                ? `/api/learning-resources?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/api/learning-resources";
+
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                allResources = Array.isArray(data.resources) ? data.resources : [];
+            } catch {
+                allResources = [];
+            }
+
+            renderTopicFilterButtons();
+            renderGrid();
+        }
+
+        subjectSelect.addEventListener("change", () => {
+            currentSubjectId = subjectSelect.value;
+            loadResources();
+        });
+
+        searchInput.addEventListener("input", () => {
+            renderGrid();
+        });
+
+        (async function init() {
+            await loadSubjects();
+            await loadResources();
+        })();
+    </script>
+<script src="../js/theme.js"></script>
 </body>
 </html>

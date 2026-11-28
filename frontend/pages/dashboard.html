@@ -3,17 +3,64 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <meta
-        name="description"
-        content="Your personalized RootLearn student dashboard."
-    >
-
+    <meta name="description" content="Your personalized RootLearn student dashboard.">
     <title>Student Dashboard | RootLearn</title>
 
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="../css/theme-pages.css">
+
+    <style>
+        .subject-toolbar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+        .subject-filter-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+        .subject-select {
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: #fff;
+            font-size: 0.95rem;
+            min-width: 220px;
+        }
+        .generate-subject-card {
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 24px;
+        }
+        .generate-subject-form {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 12px;
+            margin-top: 14px;
+        }
+        .generate-subject-input {
+            padding: 11px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 0.95rem;
+            background: #faf7f2;
+        }
+        .generate-status {
+            margin-top: 12px;
+            font-size: 0.92rem;
+            color: var(--color-primary);
+            min-height: 20px;
+        }
+    </style>
 </head>
 
 <body class="dashboard-body">
@@ -25,7 +72,6 @@
 
             <a href="../index.html" class="dashboard-brand">
                 <span class="brand-mark">R</span>
-
                 <span>
                     <strong>RootLearn</strong>
                     <small>Learn from the roots</small>
@@ -41,6 +87,11 @@
                     <span>Overview</span>
                 </a>
 
+                <a href="#generate-subject-section" class="sidebar-link">
+                    <span class="sidebar-icon">✦</span>
+                    <span>Add subject</span>
+                </a>
+
                 <a href="#learning-path" class="sidebar-link">
                     <span class="sidebar-icon">▤</span>
                     <span>My learning path</span>
@@ -49,7 +100,7 @@
                 <a href="#learning-gaps" class="sidebar-link">
                     <span class="sidebar-icon">◎</span>
                     <span>Learning gaps</span>
-                    <span class="sidebar-count">3</span>
+                    <span class="sidebar-count" id="sidebarGapsCount">0</span>
                 </a>
 
                 <a href="#progress" class="sidebar-link">
@@ -62,26 +113,38 @@
                     <span>Recent activity</span>
                 </a>
 
+                <a href="/retest" class="sidebar-link">
+                    <span class="sidebar-icon">↻</span>
+                    <span>Retest</span>
+                </a>
+
+                <a href="/prerequisite-map" class="sidebar-link">
+                    <span class="sidebar-icon">⌘</span>
+                    <span>Prerequisites</span>
+                </a>
+
+                <a href="/learning-resources" class="sidebar-link">
+                    <span class="sidebar-icon">✧</span>
+                    <span>Resources</span>
+                </a>
+
             </nav>
 
             <div class="sidebar-bottom">
 
                 <div class="sidebar-help-card">
                     <span class="help-icon">✳</span>
-
                     <h3>Small steps matter.</h3>
-
                     <p>
                         Every concept you strengthen brings you
                         closer to your learning goals.
                     </p>
-
-                    <a href="#learning-path">
-                        Continue learning →
+                    <a href="/retest">
+                        Ready for a retest? →
                     </a>
                 </div>
 
-                <a href="../index.html" class="sidebar-logout">
+                <a href="../index.html" class="sidebar-logout" id="logoutLink">
                     <span>↩</span>
                     Back to home
                 </a>
@@ -113,15 +176,13 @@
                 </div>
 
                 <div class="topbar-actions">
-
-                    <span class="demo-badge">
-                        DEMO DASHBOARD
+                    <span class="demo-badge" id="accountStatusBadge">
+                        LIVE ACCOUNT
                     </span>
 
-                    <div class="student-avatar" aria-label="Student profile">
-                        S
+                    <div class="student-avatar" id="studentAvatar" aria-label="Student profile">
+                        U
                     </div>
-
                 </div>
 
             </header>
@@ -131,7 +192,6 @@
             <section class="welcome-section">
 
                 <div class="welcome-copy">
-
                     <div class="eyebrow">
                         YOUR LEARNING SPACE
                     </div>
@@ -141,20 +201,21 @@
                         <span>a beginner.</span>
                     </h1>
 
-                    <p>
-                        Welcome back, Student! Let's find what you
-                        already know, strengthen what you don't,
-                        and keep moving forward.
+                    <p id="welcomeGreeting">
+                        Welcome back! Loading your saved progress from RootLearn...
                     </p>
 
-                    <a href="#learning-path" class="button button-primary">
-                        Continue learning <span aria-hidden="true">↗</span>
-                    </a>
-
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <a href="#learning-path" class="button button-primary">
+                            Continue learning <span aria-hidden="true">↗</span>
+                        </a>
+                        <a href="/retest" class="button button-secondary">
+                            Take a retest <span aria-hidden="true">↻</span>
+                        </a>
+                    </div>
                 </div>
 
                 <div class="welcome-art" aria-hidden="true">
-
                     <div class="art-orbit orbit-one"></div>
                     <div class="art-orbit orbit-two"></div>
 
@@ -170,26 +231,62 @@
                         <strong>One concept at a time.</strong>
                         <span>Your journey, your pace.</span>
                     </div>
-
                 </div>
 
+            </section>
+
+
+            <!-- GENERATE NEW SUBJECT -->
+            <section class="generate-subject-card" id="generate-subject-section">
+                <div class="eyebrow">SUBJECT SETUP</div>
+                <h2 style="margin: 6px 0;">Add a new subject</h2>
+                <p class="panel-description" style="margin: 0;">
+                    Enter a subject name to set up topics, prerequisites, diagnostic questions, and learning resources.
+                </p>
+
+                <form class="generate-subject-form" id="generateSubjectForm">
+                    <input
+                        type="text"
+                        id="newSubjectName"
+                        class="generate-subject-input"
+                        placeholder="Subject name (e.g., C, C++, DBMS)"
+                        required
+                    >
+                    <input
+                        type="text"
+                        id="newSubjectDesc"
+                        class="generate-subject-input"
+                        placeholder="Focus or level (optional, e.g., Core concepts)"
+                    >
+                    <button type="submit" class="button button-primary" id="generateSubjectBtn">
+                        Add Subject +
+                    </button>
+                </form>
+
+                <div class="generate-status" id="generateSubjectStatus" aria-live="polite"></div>
             </section>
 
 
             <!-- LEARNING OVERVIEW -->
             <section class="dashboard-section">
 
-                <div class="section-heading">
-
+                <div class="subject-toolbar">
                     <div>
                         <div class="eyebrow">YOUR OVERVIEW</div>
                         <h2>Your learning at a glance</h2>
                     </div>
 
-                    <span class="sample-note">
-                        Sample data
-                    </span>
-
+                    <div class="subject-filter-group">
+                        <label for="subjectFilterSelect" style="font-size: 0.9rem; font-weight: 600;">
+                            Subject:
+                        </label>
+                        <select id="subjectFilterSelect" class="subject-select">
+                            <option value="">All subjects</option>
+                        </select>
+                        <span class="sample-note" id="dataSourceLabel">
+                            Synced with SQLite
+                        </span>
+                    </div>
                 </div>
 
                 <div class="stats-grid">
@@ -200,9 +297,9 @@
                             <span class="stat-trend">Your activity</span>
                         </div>
 
-                        <div class="stat-number" id="testsCompleted">4</div>
+                        <div class="stat-number" id="testsCompleted">0</div>
                         <h3>Tests completed</h3>
-                        <p>Diagnostic and practice tests</p>
+                        <p>Diagnostic and retest attempts</p>
                     </article>
 
                     <article class="stat-card">
@@ -211,19 +308,19 @@
                             <span class="stat-trend">Keep exploring</span>
                         </div>
 
-                        <div class="stat-number" id="topicsStudied">6</div>
-                        <h3>Topics explored</h3>
-                        <p>Python concepts you've studied</p>
+                        <div class="stat-number" id="topicsStudied">0</div>
+                        <h3>Topics tracked</h3>
+                        <p>Concepts in selected view</p>
                     </article>
 
                     <article class="stat-card">
                         <div class="stat-card-top">
                             <span class="stat-icon green-icon">✓</span>
-                            <span class="stat-trend">Room to grow</span>
+                            <span class="stat-trend">Latest score</span>
                         </div>
 
                         <div class="stat-number">
-                            <span id="overallProgress">68</span><small>%</small>
+                            <span id="overallProgress">0</span><small>%</small>
                         </div>
 
                         <h3>Learning progress</h3>
@@ -234,10 +331,10 @@
                             aria-label="Overall learning progress"
                             aria-valuemin="0"
                             aria-valuemax="100"
-                            aria-valuenow="68"
+                            aria-valuenow="0"
                             id="overallProgressBar"
                         >
-                            <span style="width: 68%"></span>
+                            <span id="overallProgressFill" style="width: 0%"></span>
                         </div>
                     </article>
 
@@ -247,9 +344,9 @@
                             <span class="stat-trend">Focus area</span>
                         </div>
 
-                        <div class="stat-number" id="gapsCount">3</div>
+                        <div class="stat-number" id="gapsCount">0</div>
                         <h3>Topics to strengthen</h3>
-                        <p>Personalized learning priorities</p>
+                        <p>Open learning gaps from your attempts</p>
                     </article>
 
                 </div>
@@ -260,72 +357,51 @@
             <!-- LEARNING PATH AND GAPS -->
             <div class="dashboard-content-grid">
 
-                <section
-                    class="dashboard-panel learning-panel"
-                    id="learning-path"
-                >
+                <section class="dashboard-panel learning-panel" id="learning-path">
 
                     <div class="panel-heading">
-
                         <div>
                             <div class="eyebrow">PICK UP WHERE YOU LEFT OFF</div>
                             <h2>Your learning path</h2>
                         </div>
 
-                        <span class="panel-decoration">01 — 05</span>
-
+                        <span class="panel-decoration" id="pathRangeLabel">TOPICS</span>
                     </div>
 
                     <p class="panel-description">
-                        Build your Python foundations, one connected
-                        concept at a time.
+                        Your live topic standing from your latest assessment.
                     </p>
 
-                    <div class="learning-path-list" id="learningPathList">
+                    <div class="learning-path-list" id="learningPathList"></div>
 
-                        <!-- Populated by dashboard.js -->
-
-                    </div>
-
-                    <a href="#learning-path" class="text-link" id="viewTopicsButton">
-                        Explore all topics <span aria-hidden="true">→</span>
+                    <a href="/prerequisite-map" class="text-link" id="viewTopicsButton">
+                        View prerequisite map <span aria-hidden="true">→</span>
                     </a>
 
                 </section>
 
 
-                <section
-                    class="dashboard-panel gaps-panel"
-                    id="learning-gaps"
-                >
+                <section class="dashboard-panel gaps-panel" id="learning-gaps">
 
                     <div class="panel-heading">
-
                         <div>
                             <div class="eyebrow">PERSONALIZED INSIGHTS</div>
                             <h2>Let's strengthen these</h2>
                         </div>
 
                         <span class="gap-heading-icon">◎</span>
-
                     </div>
 
                     <p class="panel-description">
-                        These sample topics need a little more attention.
+                        Topics and prerequisites flagged from your saved attempts.
                     </p>
 
-                    <div class="gap-list" id="learningGapsList">
-
-                        <!-- Populated by dashboard.js -->
-
-                    </div>
+                    <div class="gap-list" id="learningGapsList"></div>
 
                     <div class="encouragement-box">
                         <span>✦</span>
-
                         <p>
-                            A learning gap isn't a failure.
-                            It's your next opportunity to grow.
+                            Review prerequisites and resources, then take a retest to resolve gaps.
                         </p>
                     </div>
 
@@ -337,38 +413,26 @@
             <!-- PROGRESS AND ACTIVITY -->
             <div class="dashboard-content-grid lower-grid">
 
-                <section
-                    class="dashboard-panel progress-panel"
-                    id="progress"
-                >
+                <section class="dashboard-panel progress-panel" id="progress">
 
                     <div class="panel-heading">
-
                         <div>
                             <div class="eyebrow">YOUR GROWTH</div>
                             <h2>Progress snapshot</h2>
                         </div>
 
-                        <span class="progress-period">5 topics</span>
-
+                        <span class="progress-period" id="progressTopicsCount">0 topics</span>
                     </div>
 
                     <p class="panel-description">
-                        A sample view of your current understanding
-                        of each Python topic.
+                        Real-time percentages from your latest saved attempt.
                     </p>
 
-                    <div
-                        class="topic-progress-list"
-                        id="topicProgressList"
-                    >
-                        <!-- Populated by dashboard.js -->
-                    </div>
+                    <div class="topic-progress-list" id="topicProgressList"></div>
 
                     <div class="chart-legend">
                         <span class="legend-dot mastered-dot"></span>
                         Stronger understanding
-
                         <span class="legend-dot developing-dot"></span>
                         Needs practice
                     </div>
@@ -376,27 +440,20 @@
                 </section>
 
 
-                <section
-                    class="dashboard-panel activity-panel"
-                    id="recent-activity"
-                >
+                <section class="dashboard-panel activity-panel" id="recent-activity">
 
                     <div class="panel-heading">
-
                         <div>
                             <div class="eyebrow">YOUR JOURNEY SO FAR</div>
                             <h2>Recent activity</h2>
                         </div>
-
                     </div>
 
-                    <div class="activity-list" id="recentActivityList">
-                        <!-- Populated by dashboard.js -->
-                    </div>
+                    <div class="activity-list" id="recentActivityList"></div>
 
                     <div class="activity-footer">
                         <span class="activity-status-dot"></span>
-                        You're building your foundation.
+                        Live from your RootLearn database attempts.
                     </div>
 
                 </section>
@@ -410,23 +467,25 @@
                 <div class="cta-symbol" aria-hidden="true">✳</div>
 
                 <div class="cta-copy">
-                    <div class="eyebrow">YOUR NEXT CHAPTER</div>
-
-                    <h2>Ready to discover what you know?</h2>
-
+                    <div class="eyebrow">RETEST & GROW</div>
+                    <h2>Ready to check your improvement?</h2>
                     <p>
-                        A diagnostic test can help identify the concepts
-                        you understand and the ones worth revisiting.
+                        After reviewing learning gaps, prerequisites, and resources, take a retest to update your mastery and resolve open gaps.
                     </p>
                 </div>
 
-                <button
-                    type="button"
-                    class="button button-light"
-                    id="startDiagnosticButton"
-                >
-                    Start a diagnostic <span aria-hidden="true">↗</span>
-                </button>
+                <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                    <button
+                        type="button"
+                        class="button button-light"
+                        id="startDiagnosticButton"
+                    >
+                        Start diagnostic <span aria-hidden="true">↗</span>
+                    </button>
+                    <a href="/retest" class="button button-primary" id="startRetestButton">
+                        Take retest <span aria-hidden="true">↻</span>
+                    </a>
+                </div>
 
             </section>
 
@@ -441,15 +500,247 @@
     </div>
 
 
-    <!-- FEEDBACK MESSAGE -->
-    <div
-        class="dashboard-toast"
-        id="dashboardToast"
-        role="status"
-        aria-live="polite"
-    ></div>
+    <div class="dashboard-toast" id="dashboardToast" role="status" aria-live="polite"></div>
 
-    <script src="../js/dashboard.js"></script>
+    <script>
+        "use strict";
 
+        document.getElementById("dashboardYear").textContent = String(new Date().getFullYear());
+
+        const sidebar = document.getElementById("dashboardSidebar");
+        const mobileMenuButton = document.getElementById("mobileMenuButton");
+        if (mobileMenuButton && sidebar) {
+            mobileMenuButton.addEventListener("click", () => {
+                const isOpen = sidebar.classList.toggle("open");
+                mobileMenuButton.setAttribute("aria-expanded", String(isOpen));
+            });
+        }
+
+        const subjectSelect = document.getElementById("subjectFilterSelect");
+        const genForm = document.getElementById("generateSubjectForm");
+        const genStatus = document.getElementById("generateSubjectStatus");
+        const genBtn = document.getElementById("generateSubjectBtn");
+
+        document.getElementById("startDiagnosticButton")?.addEventListener("click", () => {
+            const selectedId = subjectSelect?.value;
+            window.location.href = selectedId
+                ? `/diagnostic?subject_id=${encodeURIComponent(selectedId)}`
+                : "/diagnostic";
+        });
+
+        function escapeHtml(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, '"');
+        }
+
+        async function loadSubjects(selectedSubjectId = "") {
+            if (!subjectSelect) return;
+            try {
+                const res = await fetch("/api/subjects");
+                const data = await res.json();
+                if (res.ok && data.status === "success" && Array.isArray(data.subjects)) {
+                    const currentVal = selectedSubjectId || subjectSelect.value;
+                    subjectSelect.innerHTML = `<option value="">All subjects</option>` + data.subjects
+                        .map((s) => `<option value="${escapeHtml(s.subject_id)}">${escapeHtml(s.subject_name)}</option>`)
+                        .join("");
+                    if (currentVal) {
+                        subjectSelect.value = String(currentVal);
+                    }
+                }
+            } catch {
+                // Keep existing dropdown options on transient error
+            }
+        }
+
+        function renderDashboard(data) {
+            const student = data.student || {};
+            const name = student.name || "Student";
+            const initial = name.trim().charAt(0).toUpperCase() || "S";
+
+            document.getElementById("studentAvatar").textContent = initial;
+            document.getElementById("accountStatusBadge").textContent =
+                data.authStatus === "authenticated" ? name.toUpperCase() : "LIVE DB";
+            document.getElementById("welcomeGreeting").textContent =
+                `Welcome back, ${name}! Here is your live progress from RootLearn.`;
+
+            const testsCompleted = Number(student.testsCompleted ?? 0);
+            const topicsStudied = Number(student.topicsStudied ?? 0);
+            const overallProgress = Math.max(0, Math.min(100, Number(student.overallProgress ?? 0)));
+            const gaps = Array.isArray(data.learningGaps) ? data.learningGaps : [];
+            const topics = Array.isArray(data.topics) ? data.topics : [];
+            const activities = Array.isArray(data.activities) ? data.activities : [];
+
+            document.getElementById("testsCompleted").textContent = String(testsCompleted);
+            document.getElementById("topicsStudied").textContent = String(topicsStudied);
+            document.getElementById("overallProgress").textContent = String(overallProgress);
+            document.getElementById("overallProgressBar").setAttribute("aria-valuenow", String(overallProgress));
+            document.getElementById("overallProgressFill").style.width = `${overallProgress}%`;
+            document.getElementById("gapsCount").textContent = String(gaps.length);
+            document.getElementById("sidebarGapsCount").textContent = String(gaps.length);
+            document.getElementById("progressTopicsCount").textContent = `${topics.length} topics`;
+
+            const pathList = document.getElementById("learningPathList");
+            if (!topics.length) {
+                pathList.innerHTML = `<p class="panel-description">No topics found for this selection yet.</p>`;
+            } else {
+                pathList.innerHTML = topics.map((t, idx) => {
+                    const pct = Number(t.progress ?? 0);
+                    const statusText = t.status || "Not Assessed";
+                    const badgeClass = pct >= 75 ? "completed" : pct >= 50 ? "needs-attention" : "upcoming";
+                    return `
+                        <div class="path-item ${badgeClass}">
+                            <span class="path-marker">${String(idx + 1).padStart(2, "0")}</span>
+                            <div class="path-copy">
+                                <strong>${escapeHtml(t.topic_name)}</strong>
+                                <span>${escapeHtml(statusText)}</span>
+                            </div>
+                            <span class="path-tag">${pct}%</span>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            const gapsList = document.getElementById("learningGapsList");
+            if (!gaps.length) {
+                gapsList.innerHTML = `
+                    <p class="panel-description">
+                        No open learning gaps right now. Complete a diagnostic or retest to evaluate topics.
+                    </p>
+                `;
+            } else {
+                gapsList.innerHTML = gaps.map((g) => `
+                    <div class="gap-item">
+                        <div>
+                            <strong>${escapeHtml(g.topic)}</strong>
+                            <p>${escapeHtml(g.reason || "Needs practice")}</p>
+                        </div>
+                        <span class="gap-tag">${escapeHtml(g.gap_type || "Gap")}</span>
+                    </div>
+                `).join("");
+            }
+
+            const progressList = document.getElementById("topicProgressList");
+            if (!topics.length) {
+                progressList.innerHTML = `<p class="panel-description">No topic scores recorded yet.</p>`;
+            } else {
+                progressList.innerHTML = topics.map((t) => {
+                    const pct = Math.max(0, Math.min(100, Number(t.progress ?? 0)));
+                    const barClass = pct >= 75 ? "mastered" : "developing";
+                    return `
+                        <div class="topic-progress-row">
+                            <div class="topic-progress-meta">
+                                <span>${escapeHtml(t.topic_name)}</span>
+                                <strong>${pct}%</strong>
+                            </div>
+                            <div class="topic-progress-track">
+                                <div class="topic-progress-fill ${barClass}" style="width: ${pct}%"></div>
+                            </div>
+                        </div>
+                    `;
+                }).join("");
+            }
+
+            const activityList = document.getElementById("recentActivityList");
+            if (!activities.length) {
+                activityList.innerHTML = `
+                    <p class="panel-description">
+                        No attempts saved yet. Start a diagnostic test to record your first attempt.
+                    </p>
+                `;
+            } else {
+                activityList.innerHTML = activities.map((a) => `
+                    <div class="activity-item">
+                        <span class="activity-icon">✓</span>
+                        <div>
+                            <strong>${escapeHtml(a.title)}</strong>
+                            <p>${escapeHtml(a.description)}</p>
+                        </div>
+                    </div>
+                `).join("");
+            }
+        }
+
+        async function loadLiveDashboard() {
+            try {
+                const selectedSubjectId = subjectSelect?.value || "";
+                const summaryUrl = selectedSubjectId
+                    ? `/api/dashboard/summary?subject_id=${encodeURIComponent(selectedSubjectId)}`
+                    : "/api/dashboard/summary";
+
+                const [meRes, dashRes] = await Promise.all([
+                    fetch("/api/auth/me"),
+                    fetch(summaryUrl),
+                ]);
+                const meData = await meRes.json();
+                const dashData = await dashRes.json();
+
+                if (dashData.status === "success") {
+                    renderDashboard({
+                        ...dashData,
+                        authStatus: meData.status,
+                    });
+                } else {
+                    document.getElementById("welcomeGreeting").textContent =
+                        "Could not load dashboard summary from SQLite.";
+                }
+            } catch {
+                document.getElementById("welcomeGreeting").textContent =
+                    "Unable to reach Flask server on port 5000.";
+            }
+        }
+
+        subjectSelect?.addEventListener("change", () => {
+            loadLiveDashboard();
+        });
+
+        genForm?.addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const subject_name = document.getElementById("newSubjectName").value.trim();
+            const subject_description = document.getElementById("newSubjectDesc").value.trim();
+            if (!subject_name) return;
+
+            genBtn.disabled = true;
+            genStatus.textContent = `Setting up ${subject_name} topics, prerequisites, diagnostic test, and resources...`;
+
+            try {
+                const res = await fetch("/api/subjects/generate", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        subject_name,
+                        subject_description,
+                        questions_per_topic: 2,
+                    }),
+                });
+                const data = await res.json();
+
+                if (!res.ok || data.status !== "success") {
+                    genStatus.textContent = data.message || "Could not create subject right now. Please try again.";
+                    return;
+                }
+
+                genStatus.textContent =
+                    `Ready: "${data.subject_name}" added with ${data.topics_created} topics, ` +
+                    `${data.questions_created} diagnostic questions, and ${data.resources_created} resources.`;
+                genForm.reset();
+
+                await loadSubjects(data.subject_id ? String(data.subject_id) : "");
+                await loadLiveDashboard();
+            } catch {
+                genStatus.textContent = "Unable to connect to the server. Please try again.";
+            } finally {
+                genBtn.disabled = false;
+            }
+        });
+
+        (async function init() {
+            await loadSubjects();
+            await loadLiveDashboard();
+        })();
+    </script>
+<script src="../js/theme.js"></script>
 </body>
 </html>

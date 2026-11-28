@@ -14,6 +14,7 @@
 
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/theme-pages.css">
 
     <style>
         .login-layout {
@@ -378,8 +379,7 @@
 
     </main>
 
-
-    <script>
+<script>
         "use strict";
 
         const loginForm = document.getElementById("login-form");
@@ -389,10 +389,21 @@
         const passwordInput = document.getElementById("login-password");
         const passwordToggle = document.getElementById("toggle-login-password");
 
+        function showLoginError(message) {
+            loginError.textContent = message;
+            loginError.classList.add("visible");
+            loginSuccess.classList.remove("visible");
+        }
+
+        function showLoginSuccess(message) {
+            loginSuccess.textContent = message;
+            loginSuccess.classList.add("visible");
+            loginError.classList.remove("visible");
+        }
+
         function clearLoginMessages() {
             loginError.textContent = "";
             loginSuccess.textContent = "";
-
             loginError.classList.remove("visible");
             loginSuccess.classList.remove("visible");
         }
@@ -401,17 +412,12 @@
 
         passwordToggle.addEventListener("click", () => {
             const shouldShow = passwordInput.type === "password";
-
             passwordInput.type = shouldShow ? "text" : "password";
             passwordToggle.textContent = shouldShow ? "Hide" : "Show";
-
-            passwordToggle.setAttribute(
-                "aria-pressed",
-                String(shouldShow)
-            );
+            passwordToggle.setAttribute("aria-pressed", String(shouldShow));
         });
 
-        loginForm.addEventListener("submit", (event) => {
+        loginForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             clearLoginMessages();
 
@@ -419,13 +425,32 @@
                 return;
             }
 
-            loginError.textContent =
-                "Login isn't connected yet. We'll enable account verification " +
-                "after implementing the Flask backend.";
+            const email = document.getElementById("login-email").value.trim();
+            const password = passwordInput.value;
 
-            loginError.classList.add("visible");
+            try {
+                const response = await fetch("/api/auth/login", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok || data.status !== "success") {
+                    showLoginError(data.message || "Could not log in. Check your email and password.");
+                    return;
+                }
+
+                showLoginSuccess("Logged in! Redirecting to your dashboard...");
+                window.location.href = "/dashboard";
+            } catch (err) {
+                showLoginError("Network error connecting to the server. Make sure Flask is running on port 5000.");
+            }
         });
     </script>
+   
+    <script src="../js/theme.js"></script>
 
 </body>
 </html>

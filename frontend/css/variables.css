@@ -3,29 +3,48 @@
    ========================================= */
 
 :root {
-    /* Brand colours */
+    /* Light theme: Rich Plum + Warm Cream + Botanical Sage/Terracotta */
     --color-bg: #FAF7F2;
+    --color-surface: #FFFFFF;
+    --color-surface-warm: #F1ECE4;
+    --color-surface-card-soft: #ECE2E7;
+    --color-decor-soft: #DFECE5;
+
     --color-primary: #633B52;
     --color-primary-dark: #48283B;
     --color-accent: #C76D52;
+    --color-accent-hover: #AE593F;
     --color-accent-soft: #EBD7D3;
+    --color-botanical: #2F5E4E;
+    --color-botanical-soft: #E1EFE9;
+    --color-on-primary: #FFFFFF;
+    --color-on-accent: #FFFFFF;
 
-    /* Surfaces */
-    --color-surface: #FFFFFF;
+    --color-header-bg: rgba(250, 247, 242, 0.94);
     --color-border: #E9E0D7;
+    --color-border-strong: #D5C8BC;
 
     /* Text */
     --color-text: #28242B;
-    --color-text-muted: #827873;
+    --color-text-muted: #766D68;
+    --color-step-num: #B4A69B;
 
     /* Status colours */
-    --color-success: #54765B;
+    --color-success: #3E7358;
+    --color-success-soft: #E3EFE8;
     --color-warning: #A66B32;
     --color-danger: #B64A4A;
 
+    /* Approach section */
+    --color-approach-bg: #533045;
+    --color-approach-text: #FFFFFF;
+    --color-approach-muted: rgba(255, 255, 255, 0.8);
+    --color-approach-accent: #A9DFC7;
+    --color-approach-border: rgba(255, 255, 255, 0.3);
+
     /* Typography */
-    --font-heading: Georgia, "Times New Roman", serif;
-    --font-body: "Segoe UI", Arial, sans-serif;
+    --font-heading: "Playfair Display", Georgia, "Times New Roman", serif;
+    --font-body: "DM Sans", "Segoe UI", Arial, sans-serif;
 
     /* Spacing */
     --space-1: 0.25rem;
@@ -46,10 +65,57 @@
     /* Shadows */
     --shadow-soft: 0 8px 30px rgba(40, 36, 43, 0.06);
     --shadow-hover: 0 14px 36px rgba(40, 36, 43, 0.10);
+    --shadow-hero: 0 24px 70px rgba(40, 36, 43, 0.11);
 
     /* Layout */
     --container-width: 1180px;
 
     /* Motion */
     --transition-fast: 180ms ease;
+}
+
+[data-theme="dark"] {
+    /* Dark theme: Sage Obsidian */
+    --color-bg: #0D110F;
+    --color-surface: #151C18;
+    --color-surface-warm: #111714;
+    --color-surface-card-soft: #1A241E;
+    --color-decor-soft: #1C2B24;
+
+    --color-primary: #7AD6AC;
+    --color-primary-dark: #96E4C0;
+    --color-accent: #E59B5E;
+    --color-accent-hover: #F0AF7A;
+    --color-accent-soft: rgba(122, 214, 172, 0.15);
+    --color-botanical: #7AD6AC;
+    --color-botanical-soft: rgba(122, 214, 172, 0.14);
+    --color-on-primary: #09110D;
+    --color-on-accent: #140D07;
+
+    --color-header-bg: rgba(13, 17, 15, 0.92);
+    --color-border: #243029;
+    --color-border-strong: #33433A;
+
+    /* Text */
+    --color-text: #F0F5F2;
+    --color-text-muted: #9EB0A6;
+    --color-step-num: #63756B;
+
+    /* Status colours */
+    --color-success: #70D4A4;
+    --color-success-soft: rgba(112, 212, 164, 0.16);
+    --color-warning: #E59B5E;
+    --color-danger: #EB7A7A;
+
+    /* Approach section */
+    --color-approach-bg: #111815;
+    --color-approach-text: #F0F5F2;
+    --color-approach-muted: rgba(240, 245, 242, 0.78);
+    --color-approach-accent: #7AD6AC;
+    --color-approach-border: rgba(122, 214, 172, 0.3);
+
+    /* Shadows */
+    --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.35);
+    --shadow-hover: 0 16px 38px rgba(0, 0, 0, 0.5);
+    --shadow-hero: 0 24px 70px rgba(0, 0, 0, 0.55);
 }

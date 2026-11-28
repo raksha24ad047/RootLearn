@@ -2,9 +2,9 @@
    ROOTLEARN — GLOBAL STYLES
    ========================================= */
 
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@500;600;700&display=swap");
-
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
 }
 
@@ -16,9 +16,10 @@ body {
     margin: 0;
     background: var(--color-bg);
     color: var(--color-text);
-    font-family: "DM Sans", var(--font-body);
+    font-family: var(--font-body);
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
+    transition: background var(--transition-fast), color var(--transition-fast);
 }
 
 button,
@@ -65,8 +66,9 @@ p {
 h1,
 h2,
 h3 {
-    font-family: "Playfair Display", var(--font-heading);
+    font-family: var(--font-heading);
     line-height: 1.15;
+    color: var(--color-text);
 }
 
 h1 {
@@ -96,7 +98,7 @@ p {
 }
 
 /* =========================================
-   BUTTONS
+   BUTTONS & THEME TOGGLE
    ========================================= */
 
 .button {
@@ -113,6 +115,7 @@ p {
     transition:
         background var(--transition-fast),
         color var(--transition-fast),
+        border-color var(--transition-fast),
         transform var(--transition-fast),
         box-shadow var(--transition-fast);
 }
@@ -123,7 +126,7 @@ p {
 
 .button-primary {
     background: var(--color-primary);
-    color: white;
+    color: var(--color-on-primary);
 }
 
 .button-primary:hover {
@@ -132,7 +135,7 @@ p {
 }
 
 .button-secondary {
-    background: transparent;
+    background: var(--color-surface);
     color: var(--color-primary);
     border-color: var(--color-border);
 }
@@ -140,6 +143,32 @@ p {
 .button-secondary:hover {
     background: var(--color-accent-soft);
     border-color: var(--color-accent-soft);
+}
+
+.theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-height: 42px;
+    padding: 8px 14px;
+    border: 1px solid var(--color-border-strong);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text);
+    font-size: 0.86rem;
+    font-weight: 700;
+    transition:
+        background var(--transition-fast),
+        color var(--transition-fast),
+        border-color var(--transition-fast),
+        transform var(--transition-fast);
+}
+
+.theme-toggle:hover {
+    transform: translateY(-1px);
+    background: var(--color-botanical-soft);
+    border-color: var(--color-botanical);
+    color: var(--color-botanical);
 }
 
 /* =========================================
@@ -150,9 +179,9 @@ p {
     position: sticky;
     top: 0;
     z-index: 100;
-    background: rgba(250, 247, 242, 0.92);
+    background: var(--color-header-bg);
     backdrop-filter: blur(16px);
-    border-bottom: 1px solid rgba(233, 224, 215, 0.8);
+    border-bottom: 1px solid var(--color-border);
 }
 
 .navbar {
@@ -180,8 +209,8 @@ p {
     height: 38px;
     border-radius: 12px;
     background: var(--color-primary);
-    color: white;
-    font-family: "Playfair Display", Georgia, serif;
+    color: var(--color-on-primary);
+    font-family: var(--font-heading);
     font-size: 1.35rem;
 }
 
@@ -205,7 +234,7 @@ p {
 .nav-actions {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 
 /* =========================================
@@ -253,6 +282,7 @@ p {
 
 .site-footer {
     padding: 32px 0;
+    background: var(--color-surface);
     border-top: 1px solid var(--color-border);
 }
 
@@ -270,63 +300,8 @@ p {
 }
 
 /* =========================================
-   RESPONSIVE NAVIGATION
+   LANDING PAGE
    ========================================= */
-
-@media (max-width: 760px) {
-    .navbar {
-        min-height: 70px;
-        flex-wrap: wrap;
-        padding-block: 14px;
-    }
-
-    .nav-links {
-        order: 3;
-        width: 100%;
-        justify-content: center;
-        gap: 20px;
-        flex-wrap: wrap;
-    }
-
-    .nav-links a {
-        font-size: 0.84rem;
-    }
-
-    .nav-actions .button {
-        min-height: 40px;
-        padding: 9px 14px;
-        font-size: 0.85rem;
-    }
-
-    .container {
-        width: min(calc(100% - 28px), var(--container-width));
-    }
-
-    .card {
-        padding: 22px;
-    }
-
-    .footer-content {
-        align-items: flex-start;
-        flex-direction: column;
-    }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        scroll-behavior: auto !important;
-        transition-duration: 0.01ms !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-    }
-}
-/* =========================================
-   ROOTLEARN — LANDING PAGE
-   ========================================= */
-
-/* HERO */
 
 .hero {
     position: relative;
@@ -384,15 +359,14 @@ p {
     width: 36px;
     height: 36px;
     border-radius: 50%;
-    background: var(--color-accent-soft);
-    color: var(--color-primary);
+    background: var(--color-botanical-soft);
+    color: var(--color-botanical);
 }
 
 .hero-note p {
     margin: 0;
     font-size: 0.85rem;
 }
-
 
 /* HERO VISUAL */
 
@@ -415,7 +389,7 @@ p {
     width: 250px;
     height: 250px;
     background: var(--color-accent-soft);
-    opacity: 0.6;
+    opacity: 0.65;
 }
 
 .decor-two {
@@ -423,8 +397,8 @@ p {
     left: -25px;
     width: 170px;
     height: 170px;
-    background: #E6DDD0;
-    opacity: 0.8;
+    background: var(--color-decor-soft);
+    opacity: 0.85;
 }
 
 .learning-card {
@@ -434,7 +408,7 @@ p {
     background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 28px;
-    box-shadow: 0 24px 70px rgba(40, 36, 43, 0.11);
+    box-shadow: var(--shadow-hero);
 }
 
 .learning-card-top {
@@ -454,7 +428,7 @@ p {
 
 .journey-title {
     margin: 12px 0 0;
-    font-family: "Playfair Display", Georgia, serif;
+    font-family: var(--font-heading);
     font-size: 1.8rem;
 }
 
@@ -477,7 +451,7 @@ p {
     margin-top: 24px;
     padding: 12px;
     border-radius: var(--radius-sm);
-    background: #FAF7F2;
+    background: var(--color-surface-warm);
     color: var(--color-text-muted);
     font-size: 0.79rem;
 }
@@ -514,14 +488,14 @@ p {
     width: 36px;
     height: 36px;
     border-radius: 12px;
-    background: #F0EAE2;
+    background: var(--color-surface-warm);
     color: var(--color-primary);
     font-size: 0.9rem;
     font-weight: 700;
 }
 
 .completed .path-marker {
-    background: #E8EFE5;
+    background: var(--color-success-soft);
     color: var(--color-success);
 }
 
@@ -540,6 +514,7 @@ p {
 .path-copy strong {
     font-size: 0.85rem;
     font-weight: 700;
+    color: var(--color-text);
 }
 
 .path-copy span {
@@ -551,7 +526,7 @@ p {
     flex-shrink: 0;
     padding: 5px 9px;
     border-radius: var(--radius-pill);
-    background: #F4F0EB;
+    background: var(--color-surface-warm);
     color: var(--color-text-muted);
     font-size: 0.68rem;
     font-weight: 700;
@@ -591,7 +566,7 @@ p {
     gap: 12px;
     max-width: 280px;
     padding: 17px 20px;
-    background: white;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: 18px;
     box-shadow: var(--shadow-hover);
@@ -605,19 +580,19 @@ p {
     flex-shrink: 0;
     border-radius: 12px;
     background: var(--color-primary);
-    color: white;
+    color: var(--color-on-primary);
 }
 
 .floating-note strong {
     display: block;
     font-size: 0.82rem;
+    color: var(--color-text);
 }
 
 .floating-note p {
     margin: 3px 0 0;
     font-size: 0.72rem;
 }
-
 
 /* GENERAL SECTIONS */
 
@@ -640,11 +615,10 @@ p {
     line-height: 1.9;
 }
 
-
 /* HOW IT WORKS */
 
 .how-section {
-    background: #F0EAE2;
+    background: var(--color-surface-warm);
 }
 
 .steps-grid {
@@ -657,8 +631,8 @@ p {
     position: relative;
     min-width: 0;
     padding: 28px 23px;
-    background: rgba(255, 255, 255, 0.75);
-    border: 1px solid rgba(233, 224, 215, 0.9);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: var(--radius-md);
     transition:
         transform var(--transition-fast),
@@ -674,7 +648,7 @@ p {
     position: absolute;
     top: 24px;
     right: 22px;
-    color: #B4A69B;
+    color: var(--color-step-num);
     font-size: 0.75rem;
     font-weight: 700;
 }
@@ -686,8 +660,8 @@ p {
     height: 48px;
     margin-bottom: 25px;
     border-radius: 15px;
-    background: var(--color-accent-soft);
-    color: var(--color-primary);
+    background: var(--color-botanical-soft);
+    color: var(--color-botanical);
     font-size: 1.4rem;
 }
 
@@ -701,7 +675,6 @@ p {
     font-size: 0.87rem;
     line-height: 1.8;
 }
-
 
 /* FEATURES */
 
@@ -718,7 +691,7 @@ p {
 .feature-card {
     min-width: 0;
     padding: 32px;
-    background: white;
+    background: var(--color-surface);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
     transition:
@@ -736,7 +709,7 @@ p {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    background: #EDE3DB;
+    background: var(--color-surface-card-soft);
 }
 
 .feature-icon {
@@ -777,16 +750,16 @@ p {
     flex-wrap: wrap;
     margin-top: 38px;
     padding: 16px;
-    background: rgba(255, 255, 255, 0.65);
-    border: 1px solid rgba(99, 59, 82, 0.12);
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
     border-radius: 14px;
 }
 
 .mini-topic-map span:nth-child(odd) {
     padding: 9px 12px;
     border-radius: 10px;
-    background: white;
-    color: var(--color-primary);
+    background: var(--color-botanical-soft);
+    color: var(--color-botanical);
     font-size: 0.77rem;
     font-weight: 700;
 }
@@ -795,13 +768,12 @@ p {
     color: var(--color-accent);
 }
 
-
 /* APPROACH */
 
 .approach-section {
     padding: 90px 0;
-    background: var(--color-primary);
-    color: white;
+    background: var(--color-approach-bg);
+    color: var(--color-approach-text);
 }
 
 .approach-inner {
@@ -817,33 +789,33 @@ p {
     place-items: center;
     width: 82px;
     height: 82px;
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    border: 1px solid var(--color-approach-border);
     border-radius: 25px;
-    color: #F0C6B8;
+    color: var(--color-approach-accent);
     font-size: 2.5rem;
 }
 
 .approach-section .eyebrow {
-    color: #F0C6B8;
+    color: var(--color-approach-accent);
 }
 
 .approach-section h2 {
     margin-bottom: 24px;
-    color: white;
+    color: var(--color-approach-text);
 }
 
 .approach-section p {
     max-width: 620px;
     margin-bottom: 0;
-    color: rgba(255, 255, 255, 0.75);
+    color: var(--color-approach-muted);
     line-height: 1.9;
 }
-
 
 /* FINAL CALL TO ACTION */
 
 .final-cta {
     padding: 100px 0;
+    background: var(--color-bg);
     text-align: center;
 }
 
@@ -865,16 +837,15 @@ p {
 
 .button-light {
     background: var(--color-accent);
-    color: white;
+    color: var(--color-on-accent);
 }
 
 .button-light:hover {
-    background: #AE593F;
+    background: var(--color-accent-hover);
     box-shadow: var(--shadow-soft);
 }
 
-
-/* RESPONSIVE LANDING PAGE */
+/* RESPONSIVE */
 
 @media (max-width: 1000px) {
     .hero-grid {
@@ -903,6 +874,46 @@ p {
     .approach-symbol {
         width: 70px;
         height: 70px;
+    }
+}
+
+@media (max-width: 760px) {
+    .navbar {
+        min-height: 70px;
+        flex-wrap: wrap;
+        padding-block: 14px;
+    }
+
+    .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 20px;
+        flex-wrap: wrap;
+    }
+
+    .nav-links a {
+        font-size: 0.84rem;
+    }
+
+    .nav-actions .button,
+    .nav-actions .theme-toggle {
+        min-height: 38px;
+        padding: 8px 13px;
+        font-size: 0.84rem;
+    }
+
+    .container {
+        width: min(calc(100% - 28px), var(--container-width));
+    }
+
+    .card {
+        padding: 22px;
+    }
+
+    .footer-content {
+        align-items: flex-start;
+        flex-direction: column;
     }
 }
 
@@ -988,5 +999,16 @@ p {
 
     .final-cta {
         padding: 75px 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
     }
 }

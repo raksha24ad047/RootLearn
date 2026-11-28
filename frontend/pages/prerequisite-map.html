@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,22 +9,33 @@
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/prerequisite-map.css">
+    <link rel="stylesheet" href="../css/theme-pages.css">
 
     <script src="https://cdn.jsdelivr.net/npm/vis-network/standalone/umd/vis-network.min.js"></script>
+    <style>
+        .map-subject-select {
+            padding: 9px 12px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: #fff;
+            font-size: 0.92rem;
+        }
+    </style>
 </head>
 
 <body class="prerequisite-page">
 
     <header class="prerequisite-header">
-        <a href="dashboard.html" class="brand">
+        <a href="/dashboard" class="brand" id="mapBrandLink">
             <span class="brand-mark">R</span>
             <span>RootLearn</span>
         </a>
 
         <nav class="prerequisite-nav">
-            <a href="dashboard.html">Dashboard</a>
-            <a href="learning-path.html">Learning Path</a>
-            <a href="prerequisite-map.html" class="active">Prerequisite Map</a>
+            <a href="/dashboard" id="mapDashboardLink">Dashboard</a>
+            <a href="/learning-resources" id="mapResourcesLink">Resources</a>
+            <a href="/retest" id="mapRetestLink">Retest</a>
+            <a href="/prerequisite-map" class="active">Prerequisite Map</a>
         </nav>
     </header>
 
@@ -36,9 +46,9 @@
 
             <h1>See how your <span>knowledge connects.</span></h1>
 
-            <p>
+            <p id="mapIntroText">
                 Every concept builds on something you already know.
-                Explore the relationships between Python topics and discover
+                Explore the relationships between topics and discover
                 what to learn next.
             </p>
         </section>
@@ -46,12 +56,19 @@
         <section class="map-toolbar">
 
             <div class="map-search">
+                <label for="mapSubjectSelect">Subject</label>
+                <select id="mapSubjectSelect" class="map-subject-select">
+                    <option value="">All subjects</option>
+                </select>
+            </div>
+
+            <div class="map-search">
                 <label for="topicSearch">Find a topic</label>
 
                 <input
                     type="search"
                     id="topicSearch"
-                    placeholder="Try Variables, Loops, Functions..."
+                    placeholder="Search topics..."
                     autocomplete="off"
                 >
             </div>
@@ -91,19 +108,19 @@
 
                 <div class="map-card-heading">
                     <div>
-                        <span class="eyebrow">PYTHON PROGRAMMING</span>
+                        <span class="eyebrow" id="mapSubjectEyebrow">CONCEPT MAP</span>
                         <h2>Concept connections</h2>
                     </div>
 
                     <span class="topic-count" id="topicCount">
-                        10 topics
+                        0 topics
                     </span>
                 </div>
 
                 <div
                     id="prerequisiteNetwork"
                     role="img"
-                    aria-label="Interactive graph showing connections between Python topics"
+                    aria-label="Interactive graph showing connections between topics"
                 ></div>
 
                 <p class="map-hint">
@@ -166,14 +183,213 @@
             <p>
                 <strong>Remember:</strong>
                 prerequisites show how concepts relate to one another.
-                Your personal strengths and learning gaps will appear here
-                after we connect your diagnostic test results.
+                Your personal strengths and learning gaps update automatically
+                after diagnostic and retest attempts.
             </p>
         </section>
 
     </main>
 
-    <script src="../js/prerequisite-map.js"></script>
+    <script>
+        "use strict";
 
+        const params = new URLSearchParams(window.location.search);
+        let currentSubjectId = params.get("subject_id") || "";
+        let subjectsById = {};
+        let mapTopics = [];
+        let network = null;
+
+        const subjectSelect = document.getElementById("mapSubjectSelect");
+        const searchInput = document.getElementById("topicSearch");
+
+        function escapeHtml(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, '"');
+        }
+
+        function syncNavAndUrl() {
+            const url = new URL(window.location.href);
+            if (currentSubjectId) {
+                url.searchParams.set("subject_id", currentSubjectId);
+            } else {
+                url.searchParams.delete("subject_id");
+            }
+            window.history.replaceState({}, "", url.toString());
+
+            const q = currentSubjectId ? `?subject_id=${encodeURIComponent(currentSubjectId)}` : "";
+            document.getElementById("mapBrandLink").href = `/dashboard${q}`;
+            document.getElementById("mapDashboardLink").href = `/dashboard${q}`;
+            document.getElementById("mapResourcesLink").href = `/learning-resources${q}`;
+            document.getElementById("mapRetestLink").href = `/retest${q}`;
+
+            const subj = subjectsById[String(currentSubjectId)];
+            const label = subj ? subj.subject_name : "All Subjects";
+            document.getElementById("mapSubjectEyebrow").textContent = label.toUpperCase();
+        }
+
+        function showTopicDetails(topicId) {
+            const topic = mapTopics.find((t) => Number(t.id) === Number(topicId));
+            if (!topic) return;
+
+            document.getElementById("detailPlaceholder").hidden = true;
+            document.getElementById("detailContent").hidden = false;
+            document.getElementById("topicLevel").textContent =
+                `${topic.difficulty_level || "Foundation"} • ${topic.status || "Not Assessed"}`;
+            document.getElementById("selectedTopicName").textContent = topic.name;
+            document.getElementById("selectedTopicDescription").textContent =
+                topic.description || "Core concept in this curriculum.";
+
+            const prereqIds = Array.isArray(topic.prerequisites) ? topic.prerequisites : [];
+            const prereqNames = prereqIds
+                .map((pid) => mapTopics.find((x) => Number(x.id) === Number(pid))?.name)
+                .filter(Boolean);
+
+            document.getElementById("prerequisiteList").innerHTML = prereqNames.length
+                ? prereqNames.map((n) => `<span class="chip">${escapeHtml(n)}</span>`).join(" ")
+                : `<span class="muted">No prerequisites required first</span>`;
+
+            const depNames = mapTopics
+                .filter((x) => Array.isArray(x.prerequisites) && x.prerequisites.includes(topic.id))
+                .map((x) => x.name);
+
+            document.getElementById("dependentList").innerHTML = depNames.length
+                ? depNames.map((n) => `<span class="chip">${escapeHtml(n)}</span>`).join(" ")
+                : `<span class="muted">Leaf / capstone topic</span>`;
+
+            document.getElementById("viewResourcesBtn").onclick = () => {
+                window.location.href = currentSubjectId
+                    ? `/learning-resources?subject_id=${encodeURIComponent(currentSubjectId)}`
+                    : "/learning-resources";
+            };
+        }
+
+        function renderGraph(filterText = "") {
+            const q = filterText.trim().toLowerCase();
+            const filtered = q
+                ? mapTopics.filter(
+                      (t) =>
+                          t.name.toLowerCase().includes(q) ||
+                          (t.description || "").toLowerCase().includes(q)
+                  )
+                : mapTopics;
+
+            document.getElementById("topicCount").textContent = `${filtered.length} topics`;
+
+            const visibleIds = new Set(filtered.map((t) => Number(t.id)));
+            const nodes = new vis.DataSet(
+                filtered.map((t) => {
+                    const isInter = (t.difficulty_level || "").toLowerCase() === "intermediate" ||
+                        (t.difficulty_level || "").toLowerCase() === "advanced";
+                    return {
+                        id: t.id,
+                        label: t.name,
+                        color: isInter
+                            ? { background: "#f4ebe1", border: "#6b3e26" }
+                            : { background: "#e8f3ee", border: "#2b6e4e" },
+                        shape: "box",
+                        margin: 10,
+                    };
+                })
+            );
+
+            const edgesList = [];
+            filtered.forEach((t) => {
+                (t.prerequisites || []).forEach((pid) => {
+                    if (visibleIds.has(Number(pid))) {
+                        edgesList.push({
+                            from: pid,
+                            to: t.id,
+                            arrows: "to",
+                        });
+                    }
+                });
+            });
+            const edges = new vis.DataSet(edgesList);
+
+            const container = document.getElementById("prerequisiteNetwork");
+            if (typeof vis !== "undefined" && vis.Network) {
+                network = new vis.Network(
+                    container,
+                    { nodes, edges },
+                    {
+                        layout: { hierarchical: { enabled: false } },
+                        physics: { enabled: true, stabilization: true },
+                    }
+                );
+                network.on("click", (paramsObj) => {
+                    if (paramsObj.nodes && paramsObj.nodes.length) {
+                        showTopicDetails(paramsObj.nodes[0]);
+                    }
+                });
+            }
+        }
+
+        async function loadSubjects() {
+            try {
+                const res = await fetch("/api/subjects");
+                const data = await res.json();
+                if (res.ok && data.status === "success" && Array.isArray(data.subjects)) {
+                    subjectsById = {};
+                    data.subjects.forEach((s) => {
+                        subjectsById[String(s.subject_id)] = s;
+                    });
+                    subjectSelect.innerHTML =
+                        `<option value="">All subjects</option>` +
+                        data.subjects
+                            .map((s) => `<option value="${escapeHtml(s.subject_id)}">${escapeHtml(s.subject_name)}</option>`)
+                            .join("");
+                    if (currentSubjectId) {
+                        subjectSelect.value = String(currentSubjectId);
+                    }
+                }
+            } catch {
+                // Keep default option
+            }
+        }
+
+        async function loadMap() {
+            syncNavAndUrl();
+            const url = currentSubjectId
+                ? `/api/prerequisite-map?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/api/prerequisite-map";
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                mapTopics = Array.isArray(data.topics) ? data.topics : [];
+            } catch {
+                mapTopics = [];
+            }
+            renderGraph(searchInput.value);
+        }
+
+        subjectSelect.addEventListener("change", () => {
+            currentSubjectId = subjectSelect.value;
+            loadMap();
+        });
+
+        searchInput.addEventListener("input", () => {
+            renderGraph(searchInput.value);
+        });
+
+        document.getElementById("showAllBtn").addEventListener("click", () => {
+            searchInput.value = "";
+            renderGraph("");
+        });
+
+        document.getElementById("resetMapBtn").addEventListener("click", () => {
+            searchInput.value = "";
+            renderGraph("");
+            if (network) network.fit();
+        });
+
+        (async function init() {
+            await loadSubjects();
+            await loadMap();
+        })();
+    </script>
+<script src="../js/theme.js"></script>
 </body>
 </html>

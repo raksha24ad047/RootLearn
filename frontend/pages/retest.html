@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Retest | RootLearn</title>
+
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+<link rel="stylesheet" href="../css/theme-pages.css">
+    <style>
+        .retest-wrap {
+            max-width: 860px;
+            margin: 32px auto;
+            padding: 0 20px 60px;
+        }
+        .retest-card {
+            background: #fff;
+            border: 1px solid var(--color-border);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 18px;
+        }
+        .retest-topic-pill {
+            display: inline-block;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 999px;
+            background: rgba(99, 59, 82, 0.1);
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+        .retest-options {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+        .retest-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            cursor: pointer;
+            background: #faf7f2;
+        }
+        .retest-option:hover {
+            border-color: var(--color-primary);
+        }
+        .retest-result {
+            display: none;
+            background: #eef5ec;
+            border: 1px solid #c6d8c6;
+            color: #25472a;
+            border-radius: 14px;
+            padding: 22px;
+            margin-top: 24px;
+        }
+        .retest-result.visible {
+            display: block;
+        }
+    </style>
+</head>
+<body class="dashboard-body">
+    <div class="retest-wrap">
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; margin-bottom: 24px;">
+            <div>
+                <div class="eyebrow">STEP 5 · RETEST</div>
+                <h1 style="margin: 6px 0;">Concept Retest</h1>
+                <p id="retestSubtitle" class="panel-description" style="margin: 0;">
+                    Re-testing your targeted gap and prerequisite topics to verify mastery.
+                </p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <a href="/learning-resources" class="button button-secondary">← Resources</a>
+                <a href="/dashboard" class="button button-primary">Dashboard</a>
+            </div>
+        </div>
+
+        <form id="retestForm">
+            <div id="retestQuestionsContainer">Loading retest questions...</div>
+
+            <div style="margin-top: 20px; display: flex; gap: 12px;">
+                <button type="submit" class="button button-primary" id="submitRetestBtn">
+                    Submit Retest & Update Progress →
+                </button>
+            </div>
+        </form>
+
+        <div id="retestResultBox" class="retest-result" aria-live="polite"></div>
+    </div>
+
+    <script>
+        "use strict";
+
+        const container = document.getElementById("retestQuestionsContainer");
+        const subtitle = document.getElementById("retestSubtitle");
+        const form = document.getElementById("retestForm");
+        const resultBox = document.getElementById("retestResultBox");
+
+        function escapeHtml(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, '"');
+        }
+
+        async function loadRetestQuestions() {
+            try {
+                const res = await fetch("/api/retest/questions");
+                const data = await res.json();
+
+                if (!res.ok || data.status !== "success" || !data.questions?.length) {
+                    container.innerHTML = `
+                        <div class="retest-card">
+                            <p>${escapeHtml(data.message || "No retest questions available right now.")}</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                if (data.focus_topics?.length) {
+                    subtitle.textContent = `Targeted retest focusing on: ${data.focus_topics.join(", ")}.`;
+                }
+
+                container.innerHTML = data.questions.map((q, index) => `
+                    <article class="retest-card">
+                        <span class="retest-topic-pill">${escapeHtml(q.topic_name)}</span>
+                        <h3>Q${index + 1}. ${escapeHtml(q.question_text)}</h3>
+                        <div class="retest-options">
+                            ${["A", "B", "C", "D"].map((opt) => {
+                                const label = q[`option_${opt.toLowerCase()}`];
+                                if (!label) return "";
+                                return `
+                                    <label class="retest-option">
+                                        <input type="radio" name="q_${q.question_id}" value="${opt}" required>
+                                        <strong>${opt}.</strong>
+                                        <span>${escapeHtml(label)}</span>
+                                    </label>
+                                `;
+                            }).join("")}
+                        </div>
+                    </article>
+                `).join("");
+            } catch (err) {
+                container.innerHTML = `
+                    <div class="retest-card">
+                        <p>Failed to load retest questions from Flask. Make sure the backend is running on port 5000.</p>
+                    </div>
+                `;
+            }
+        }
+
+        form.addEventListener("submit", async (event) => {
+            event.preventDefault();
+
+            const formData = new FormData(form);
+            const answers = {};
+            for (const [key, value] of formData.entries()) {
+                const qid = key.replace(/^q_/, "");
+                answers[qid] = value;
+            }
+
+            try {
+                const res = await fetch("/api/retest/submit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ answers }),
+                });
+                const data = await res.json();
+
+                if (!res.ok || data.status !== "success") {
+                    resultBox.innerHTML = `<strong>Error:</strong> ${escapeHtml(data.message || "Could not submit retest.")}`;
+                    resultBox.classList.add("visible");
+                    return;
+                }
+
+                const topicSummary = (data.topic_results || [])
+                    .map((t) => `<li><strong>${escapeHtml(t.topic_name)}</strong>: ${t.correct}/${t.total} (${t.percentage}%) — ${escapeHtml(t.status)}</li>`)
+                    .join("");
+
+                resultBox.innerHTML = `
+                    <h2 style="margin-top: 0;">Retest Score: ${data.percentage}% (${data.correct}/${data.total_questions})</h2>
+                    <p>Saved to SQLite (Attempt #${data.attempt_id}). Open gaps resolved: <strong>${data.resolved_gaps ?? 0}</strong>.</p>
+                    <ul>${topicSummary}</ul>
+                    <div style="margin-top: 14px;">
+                        <a href="/dashboard" class="button button-primary">Back to Live Dashboard →</a>
+                    </div>
+                `;
+                resultBox.classList.add("visible");
+                resultBox.scrollIntoView({ behavior: "smooth" });
+            } catch (err) {
+                resultBox.innerHTML = `<strong>Network error:</strong> Could not reach /api/retest/submit.`;
+                resultBox.classList.add("visible");
+            }
+        });
+
+        loadRetestQuestions();
+    </script>
+    <script src="../js/theme.js"></script>
+</body>
+</html>

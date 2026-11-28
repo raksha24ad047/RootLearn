@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,17 +9,37 @@
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/diagnostic-test.css">
+    <link rel="stylesheet" href="../css/theme-pages.css">
+
+    <style>
+        .subject-picker-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+            justify-content: center;
+            margin: 18px 0 6px;
+        }
+        .subject-picker-bar select {
+            padding: 10px 14px;
+            border: 1px solid var(--color-border);
+            border-radius: 10px;
+            background: #fff;
+            font-size: 0.95rem;
+            min-width: 220px;
+        }
+    </style>
 </head>
 
 <body class="diagnostic-page">
 
     <header class="diagnostic-header">
-        <a href="dashboard.html" class="diagnostic-brand">
+        <a href="/dashboard" class="diagnostic-brand" id="brandLink">
             <span class="brand-mark">R</span>
             <span>RootLearn</span>
         </a>
 
-        <a href="dashboard.html" class="back-link">← Back to Dashboard</a>
+        <a href="/dashboard" class="back-link" id="backDashboardLink">← Back to Dashboard</a>
     </header>
 
     <main class="diagnostic-main">
@@ -31,20 +50,27 @@
 
             <h1>Discover what you <span>already know.</span></h1>
 
-            <p>
-                This diagnostic assessment explores your understanding of
-                Python fundamentals. Your results will help RootLearn
-                identify topics that may need more attention.
+            <p id="introDescription">
+                This diagnostic assessment explores your understanding of core
+                concepts. Your results will help RootLearn identify topics
+                that may need more attention.
             </p>
+
+            <div class="subject-picker-bar">
+                <label for="diagnosticSubjectSelect"><strong>Choose subject:</strong></label>
+                <select id="diagnosticSubjectSelect">
+                    <option value="">All / Default</option>
+                </select>
+            </div>
 
             <div class="test-overview">
                 <div class="overview-item">
-                    <span class="overview-number">20</span>
+                    <span class="overview-number" id="overviewQuestionsCount">—</span>
                     <span class="overview-label">Questions</span>
                 </div>
 
                 <div class="overview-item">
-                    <span class="overview-number">10</span>
+                    <span class="overview-number" id="overviewTopicsCount">—</span>
                     <span class="overview-label">Topics</span>
                 </div>
 
@@ -68,7 +94,7 @@
             </button>
 
             <p class="intro-footnote">
-                Your topic-wise results will be available after submission.
+                Your topic-wise results and learning gaps will be saved after submission.
             </p>
         </section>
 
@@ -77,12 +103,12 @@
 
             <div class="test-heading">
                 <div>
-                    <span class="eyebrow">PYTHON PROGRAMMING</span>
-                    <h1>Let's test your foundations.</h1>
+                    <span class="eyebrow" id="activeSubjectEyebrow">DIAGNOSTIC ASSESSMENT</span>
+                    <h1 id="activeSubjectHeading">Let's test your foundations.</h1>
                 </div>
 
                 <span id="answeredCounter" class="answered-counter">
-                    0 of 20 answered
+                    0 of 0 answered
                 </span>
             </div>
 
@@ -93,8 +119,8 @@
             <div class="question-card">
 
                 <div class="question-meta">
-                    <span id="questionNumber">QUESTION 01 OF 20</span>
-                    <span id="questionTopic" class="question-topic">Variables</span>
+                    <span id="questionNumber">QUESTION 01 OF 01</span>
+                    <span id="questionTopic" class="question-topic">Topic</span>
                 </div>
 
                 <h2 id="questionText">Loading question...</h2>
@@ -114,7 +140,6 @@
                     ← Previous
                 </button>
 
-               
                 <button type="button" id="nextQuestionBtn" class="primary-btn">
                     Next Question →
                 </button>
@@ -159,8 +184,8 @@
                 <span class="eyebrow">YOUR DIAGNOSTIC REPORT</span>
                 <h1>Your learning journey, <span>decoded.</span></h1>
                 <p>
-                    Use these results to understand your current strengths
-                    and choose what to learn next.
+                    Use these results to understand your current strengths,
+                    learning gaps, and what to learn next.
                 </p>
             </div>
 
@@ -203,6 +228,10 @@
                 <button type="button" id="openResourcesBtn" class="secondary-btn">
                     Browse Learning Resources
                 </button>
+
+                <button type="button" id="openRetestBtn" class="secondary-btn">
+                    Take Retest for Gaps ↻
+                </button>
             </div>
 
             <p class="results-disclaimer">
@@ -217,7 +246,270 @@
 
     </main>
 
-    <script src="../js/diagnostic-test.js"></script>
+    <script>
+        "use strict";
 
+        const params = new URLSearchParams(window.location.search);
+        let currentSubjectId = params.get("subject_id") || "";
+        let subjectsMap = {};
+        let questions = [];
+        let currentIndex = 0;
+        const selectedAnswers = {};
+
+        const subjectSelect = document.getElementById("diagnosticSubjectSelect");
+        const introEl = document.getElementById("testIntro");
+        const testAreaEl = document.getElementById("testArea");
+        const confirmEl = document.getElementById("submitConfirmation");
+        const resultsEl = document.getElementById("testResults");
+        const statusEl = document.getElementById("testStatus");
+
+        function escapeHtml(text) {
+            return String(text ?? "")
+                .replace(/&/g, "&")
+                .replace(/</g, "<")
+                .replace(/>/g, ">")
+                .replace(/"/g, '"');
+        }
+
+        function syncUrlAndLinks() {
+            const url = new URL(window.location.href);
+            if (currentSubjectId) {
+                url.searchParams.set("subject_id", currentSubjectId);
+            } else {
+                url.searchParams.delete("subject_id");
+            }
+            window.history.replaceState({}, "", url.toString());
+
+            const q = currentSubjectId ? `?subject_id=${encodeURIComponent(currentSubjectId)}` : "";
+            document.getElementById("backDashboardLink").href = `/dashboard${q}`;
+            document.getElementById("brandLink").href = `/dashboard${q}`;
+        }
+
+        function updateSubjectLabels() {
+            const subj = subjectsMap[String(currentSubjectId)];
+            const label = subj ? subj.subject_name : "All Subjects";
+            document.getElementById("activeSubjectEyebrow").textContent = label.toUpperCase();
+            document.getElementById("introDescription").textContent = subj
+                ? `This diagnostic assessment explores your ${subj.subject_name} foundations and identifies learning gaps for your retest.`
+                : "This diagnostic assessment explores your understanding across concepts and identifies learning gaps.";
+        }
+
+        async function loadSubjectsDropdown() {
+            try {
+                const res = await fetch("/api/subjects");
+                const data = await res.json();
+                if (res.ok && data.status === "success" && Array.isArray(data.subjects)) {
+                    subjectsMap = {};
+                    data.subjects.forEach((s) => {
+                        subjectsMap[String(s.subject_id)] = s;
+                    });
+                    subjectSelect.innerHTML =
+                        `<option value="">All subjects</option>` +
+                        data.subjects
+                            .map((s) => `<option value="${escapeHtml(s.subject_id)}">${escapeHtml(s.subject_name)}</option>`)
+                            .join("");
+                    if (currentSubjectId) {
+                        subjectSelect.value = String(currentSubjectId);
+                    }
+                }
+            } catch {
+                // Keep default option if unavailable
+            }
+            updateSubjectLabels();
+        }
+
+        async function loadQuestions() {
+            syncUrlAndLinks();
+            updateSubjectLabels();
+            const url = currentSubjectId
+                ? `/api/diagnostic/questions?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/api/diagnostic/questions";
+            try {
+                const res = await fetch(url);
+                const data = await res.json();
+                questions = Array.isArray(data.questions) ? data.questions : [];
+                const uniqueTopics = new Set(questions.map((q) => q.topic_id));
+                document.getElementById("overviewQuestionsCount").textContent = String(questions.length);
+                document.getElementById("overviewTopicsCount").textContent = String(uniqueTopics.size);
+            } catch {
+                questions = [];
+                document.getElementById("overviewQuestionsCount").textContent = "0";
+                document.getElementById("overviewTopicsCount").textContent = "0";
+            }
+        }
+
+        function renderQuestion() {
+            const total = questions.length;
+            if (!total) return;
+
+            const q = questions[currentIndex];
+            const answeredCount = Object.keys(selectedAnswers).length;
+
+            document.getElementById("answeredCounter").textContent = `${answeredCount} of ${total} answered`;
+            document.getElementById("testProgress").style.width = `${Math.round(((currentIndex + 1) / total) * 100)}%`;
+            document.getElementById("questionNumber").textContent =
+                `QUESTION ${String(currentIndex + 1).padStart(2, "0")} OF ${String(total).padStart(2, "0")}`;
+            document.getElementById("questionTopic").textContent = q.topic_name || "Topic";
+            document.getElementById("questionText").textContent = q.question_text;
+            document.getElementById("questionError").hidden = true;
+
+            const opts = [
+                ["A", q.option_a],
+                ["B", q.option_b],
+                ["C", q.option_c],
+                ["D", q.option_d],
+            ];
+            const currentPick = selectedAnswers[String(q.question_id)] || "";
+
+            document.getElementById("answerOptions").innerHTML = opts
+                .map(([letter, text]) => {
+                    const active = currentPick === letter ? "selected" : "";
+                    return `
+                        <button type="button" class="answer-option ${active}" data-option="${letter}">
+                            <strong>${letter}.</strong> <span>${escapeHtml(text)}</span>
+                        </button>
+                    `;
+                })
+                .join("");
+
+            document.querySelectorAll("#answerOptions .answer-option").forEach((btn) => {
+                btn.addEventListener("click", () => {
+                    selectedAnswers[String(q.question_id)] = btn.dataset.option;
+                    renderQuestion();
+                });
+            });
+
+            document.getElementById("previousQuestionBtn").disabled = currentIndex === 0;
+            const isLast = currentIndex === total - 1;
+            document.getElementById("nextQuestionBtn").hidden = isLast;
+            document.getElementById("submitTestBtn").hidden = !isLast;
+        }
+
+        subjectSelect.addEventListener("change", async () => {
+            currentSubjectId = subjectSelect.value;
+            currentIndex = 0;
+            Object.keys(selectedAnswers).forEach((k) => delete selectedAnswers[k]);
+            await loadQuestions();
+        });
+
+        document.getElementById("startTestBtn").addEventListener("click", async () => {
+            if (!questions.length) await loadQuestions();
+            if (!questions.length) {
+                statusEl.hidden = false;
+                statusEl.textContent = "No diagnostic questions available for this subject yet.";
+                return;
+            }
+            statusEl.hidden = true;
+            currentIndex = 0;
+            introEl.hidden = true;
+            resultsEl.hidden = true;
+            confirmEl.hidden = true;
+            testAreaEl.hidden = false;
+            renderQuestion();
+        });
+
+        document.getElementById("previousQuestionBtn").addEventListener("click", () => {
+            if (currentIndex > 0) {
+                currentIndex -= 1;
+                renderQuestion();
+            }
+        });
+
+        document.getElementById("nextQuestionBtn").addEventListener("click", () => {
+            const q = questions[currentIndex];
+            if (!q || !selectedAnswers[String(q.question_id)]) {
+                document.getElementById("questionError").hidden = false;
+                return;
+            }
+            if (currentIndex < questions.length - 1) {
+                currentIndex += 1;
+                renderQuestion();
+            }
+        });
+
+        document.getElementById("submitTestBtn").addEventListener("click", () => {
+            const q = questions[currentIndex];
+            if (q && !selectedAnswers[String(q.question_id)]) {
+                document.getElementById("questionError").hidden = false;
+                return;
+            }
+            testAreaEl.hidden = true;
+            confirmEl.hidden = false;
+            document.getElementById("completionMessage").textContent =
+                `You answered ${Object.keys(selectedAnswers).length} of ${questions.length} questions.`;
+        });
+
+        document.getElementById("reviewAnswersBtn").addEventListener("click", () => {
+            confirmEl.hidden = true;
+            testAreaEl.hidden = false;
+            renderQuestion();
+        });
+
+        document.getElementById("confirmSubmitBtn").addEventListener("click", async () => {
+            confirmEl.hidden = true;
+            statusEl.hidden = false;
+            statusEl.textContent = "Saving your diagnostic results and identifying learning gaps...";
+
+            try {
+                const res = await fetch("/api/diagnostic/submit", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        subject_id: currentSubjectId ? Number(currentSubjectId) : null,
+                        answers: selectedAnswers,
+                    }),
+                });
+                const data = await res.json();
+                statusEl.hidden = true;
+                resultsEl.hidden = false;
+
+                document.getElementById("overallScore").textContent = `${data.percentage ?? 0}%`;
+                document.getElementById("correctCount").textContent = String(data.correct ?? 0);
+                document.getElementById("incorrectCount").textContent = String(data.incorrect ?? 0);
+                document.getElementById("overallFeedback").textContent =
+                    (data.percentage ?? 0) >= 75
+                        ? "Strong start! Check any topics below to polish edge cases."
+                        : "Great baseline—your learning gaps and prerequisites are ready to review.";
+
+                const list = document.getElementById("topicResultsList");
+                list.innerHTML = (data.topic_results || [])
+                    .map(
+                        (tr) => `
+                        <div class="topic-result-item">
+                            <strong>${escapeHtml(tr.topic_name)}</strong>
+                            <span>${escapeHtml(tr.status)} (${tr.percentage}%)</span>
+                        </div>
+                    `
+                    )
+                    .join("");
+            } catch {
+                statusEl.textContent = "Could not submit diagnostic test right now.";
+            }
+        });
+
+        document.getElementById("openMapBtn").addEventListener("click", () => {
+            window.location.href = currentSubjectId
+                ? `/prerequisite-map?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/prerequisite-map";
+        });
+
+        document.getElementById("openResourcesBtn").addEventListener("click", () => {
+            window.location.href = currentSubjectId
+                ? `/learning-resources?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/learning-resources";
+        });
+
+        document.getElementById("openRetestBtn").addEventListener("click", () => {
+            window.location.href = currentSubjectId
+                ? `/retest?subject_id=${encodeURIComponent(currentSubjectId)}`
+                : "/retest";
+        });
+
+        (async function init() {
+            await loadSubjectsDropdown();
+            await loadQuestions();
+        })();
+    </script>
+<script src="../js/theme.js"></script>
 </body>
 </html>

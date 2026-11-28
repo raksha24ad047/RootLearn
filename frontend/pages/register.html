@@ -30,7 +30,7 @@
             padding: 42px clamp(28px, 5vw, 76px);
             overflow: hidden;
             background: var(--color-primary);
-            color: white;
+            color: var(--color-on-primary);
         }
 
         .auth-story::before {
@@ -40,7 +40,7 @@
             height: 360px;
             right: -150px;
             top: 18%;
-            border: 1px solid rgba(255, 255, 255, 0.17);
+            border: 1px solid var(--color-approach-border);
             border-radius: 50%;
             box-shadow:
                 0 0 0 35px rgba(255, 255, 255, 0.035),
@@ -48,13 +48,14 @@
         }
 
         .auth-story .brand {
-            color: white;
+            color: var(--color-on-primary);
             position: relative;
             z-index: 1;
         }
 
         .auth-story .brand-mark {
             background: var(--color-accent);
+            color: var(--color-on-accent);
         }
 
         .story-content {
@@ -68,7 +69,7 @@
             display: inline-flex;
             align-items: center;
             gap: 9px;
-            color: #F0C6B8;
+            color: var(--color-approach-accent);
             font-size: 0.75rem;
             font-weight: 700;
             letter-spacing: 0.13em;
@@ -85,17 +86,17 @@
         .story-content h1 {
             margin-top: 24px;
             margin-bottom: 22px;
-            color: white;
+            color: var(--color-approach-text);
             font-size: clamp(2.6rem, 4.2vw, 4.2rem);
         }
 
         .story-content h1 em {
-            color: #F0C6B8;
+            color: var(--color-approach-accent);
             font-weight: 500;
         }
 
         .story-content > p {
-            color: rgba(255, 255, 255, 0.76);
+            color: var(--color-approach-muted);
             font-size: 1rem;
             line-height: 1.9;
         }
@@ -110,7 +111,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            color: rgba(255, 255, 255, 0.91);
+            color: var(--color-approach-text);
             font-size: 0.9rem;
         }
 
@@ -120,24 +121,32 @@
             width: 32px;
             height: 32px;
             flex-shrink: 0;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid var(--color-approach-border);
             border-radius: 10px;
-            color: #F0C6B8;
+            color: var(--color-approach-accent);
         }
 
         .story-footer {
             position: relative;
             z-index: 1;
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--color-approach-muted);
             font-size: 0.8rem;
         }
 
         .auth-form-side {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             justify-content: center;
-            padding: 48px 24px;
+            align-items: center;
+            padding: 36px 24px 48px;
             background: var(--color-bg);
+        }
+
+        .auth-top-bar {
+            width: min(100%, 440px);
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 18px;
         }
 
         .auth-form-container {
@@ -146,7 +155,7 @@
 
         .mobile-brand {
             display: none;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
 
         .auth-heading {
@@ -182,21 +191,23 @@
             padding: 12px 15px;
             border: 1px solid var(--color-border);
             border-radius: 12px;
-            background: white;
+            background: var(--color-surface);
             color: var(--color-text);
             outline: none;
             transition:
                 border-color var(--transition-fast),
-                box-shadow var(--transition-fast);
+                box-shadow var(--transition-fast),
+                background var(--transition-fast);
         }
 
         .form-field input:focus {
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 3px rgba(99, 59, 82, 0.1);
+            box-shadow: 0 0 0 3px var(--color-accent-soft);
         }
 
         .form-field input::placeholder {
-            color: #AAA09A;
+            color: var(--color-text-muted);
+            opacity: 0.75;
         }
 
         .password-wrap {
@@ -228,10 +239,10 @@
         .form-error {
             display: none;
             padding: 12px 14px;
-            border: 1px solid #E7B9B5;
+            border: 1px solid var(--color-danger);
             border-radius: 10px;
-            background: #FFF0EE;
-            color: #8F3434;
+            background: var(--color-accent-soft);
+            color: var(--color-danger);
             font-size: 0.84rem;
         }
 
@@ -242,10 +253,10 @@
         .form-success {
             display: none;
             padding: 13px 15px;
-            border: 1px solid #C6D8C6;
+            border: 1px solid var(--color-success);
             border-radius: 10px;
-            background: #EEF5EC;
-            color: #355A3B;
+            background: var(--color-success-soft);
+            color: var(--color-success);
             font-size: 0.86rem;
         }
 
@@ -292,7 +303,7 @@
 
             .auth-form-side {
                 min-height: 100vh;
-                padding: 38px 22px;
+                padding: 28px 22px 38px;
             }
 
             .mobile-brand {
@@ -359,6 +370,19 @@
 
 
         <section class="auth-form-side">
+
+            <div class="auth-top-bar">
+                <button
+                    type="button"
+                    id="themeToggleBtn"
+                    class="theme-toggle"
+                    aria-label="Toggle light and dark theme"
+                    aria-pressed="false"
+                >
+                    <span id="themeToggleIcon" aria-hidden="true">☾</span>
+                    <span id="themeToggleText">Dark</span>
+                </button>
+            </div>
 
             <div class="auth-form-container">
 
@@ -517,7 +541,6 @@
 
     </main>
 
-
     <script>
         "use strict";
 
@@ -529,6 +552,12 @@
             errorBox.textContent = message;
             errorBox.classList.add("visible");
             successBox.classList.remove("visible");
+        }
+
+        function showSuccess(message) {
+            successBox.textContent = message;
+            successBox.classList.add("visible");
+            errorBox.classList.remove("visible");
         }
 
         function hideMessages() {
@@ -548,7 +577,6 @@
                 }
 
                 const shouldShow = input.type === "password";
-
                 input.type = shouldShow ? "text" : "password";
                 button.textContent = shouldShow ? "Hide" : "Show";
                 button.setAttribute("aria-pressed", String(shouldShow));
@@ -557,7 +585,7 @@
 
         registerForm.addEventListener("input", hideMessages);
 
-        registerForm.addEventListener("submit", (event) => {
+        registerForm.addEventListener("submit", async (event) => {
             event.preventDefault();
             hideMessages();
 
@@ -565,19 +593,10 @@
                 return;
             }
 
-            const fullName = document
-                .getElementById("full-name")
-                .value
-                .trim();
-
-            const email = document
-                .getElementById("email")
-                .value
-                .trim();
-
+            const fullName = document.getElementById("full-name").value.trim();
+            const email = document.getElementById("email").value.trim();
             const password = document.getElementById("password").value;
-            const confirmPassword =
-                document.getElementById("confirm-password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
 
             if (fullName.length < 2) {
                 showError("Please enter a name containing at least 2 characters.");
@@ -594,19 +613,33 @@
                 return;
             }
 
-            /*
-             * Frontend prototype only:
-             * Never save the password to localStorage or sessionStorage.
-             * Real account creation will be handled by Flask.
-             */
+            try {
+                const response = await fetch("/api/auth/register", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        full_name: fullName,
+                        email,
+                        password
+                    })
+                });
 
-            successBox.textContent =
-                "Your form is valid! Account creation is not connected yet. " +
-                "Next, we'll connect this page to the login flow and dashboard.";
+                const data = await response.json();
 
-            successBox.classList.add("visible");
+                if (!response.ok || data.status !== "success") {
+                    showError(data.message || "Could not create your account.");
+                    return;
+                }
+
+                showSuccess("Account created! Taking you to your dashboard...");
+                window.location.href = "/dashboard";
+            } catch (err) {
+                showError("Network error connecting to the server. Make sure Flask is running on port 5000.");
+            }
         });
     </script>
+
+    <script src="../js/theme.js"></script>
 
 </body>
 </html>
